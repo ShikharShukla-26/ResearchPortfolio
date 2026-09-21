@@ -50,30 +50,32 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     .filter((l) => l.section === 'footer')
     .map((l) => ({ href: l.href, label: l.label }));
 
+  const fallback = staticPortfolio();
+
   return {
     site,
     research:
-      researchRows.length > 0
+      researchResult.status === 'fulfilled'
         ? researchRows.map((r) => ({
             href: `/work/${r.slug}`,
             title: r.title,
             date: r.dateDisplay,
             dateTime: r.dateTime
           }))
-        : staticPortfolio().research,
+        : fallback.research,
     writing:
-      writingRows.length > 0
+      writingResult.status === 'fulfilled'
         ? writingRows.map((w) => ({
             href: w.href,
             title: w.title,
             date: w.dateDisplay,
             dateTime: w.dateTime
           }))
-        : staticPortfolio().writing,
+        : fallback.writing,
     elsewhere:
-      elsewhereLinks.length > 0
+      linksResult.status === 'fulfilled'
         ? elsewhereLinks
-        : elsewhere.map((l) => ({ href: l.href, label: l.label })),
+        : fallback.elsewhere,
     footer:
       footerLinks.length > 0
         ? footerLinks

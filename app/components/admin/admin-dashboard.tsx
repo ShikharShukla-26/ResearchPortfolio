@@ -11,6 +11,7 @@ import type {
   SiteSettings,
   WritingItem
 } from '@/lib/cms/types';
+import { normalizeSlug } from '@/lib/cms/slug';
 
 type Tab = 'site' | 'research' | 'writing' | 'links' | 'logs';
 
@@ -123,7 +124,6 @@ export function AdminDashboard() {
         await loadAll();
         throw err;
       }
-      await loadAll();
       setStatus('Order updated.');
     });
   }
@@ -148,8 +148,13 @@ export function AdminDashboard() {
 
   async function saveResearch() {
     if (!researchDraft) return;
+    const slug = normalizeSlug(researchDraft.slug);
+    if (!slug) {
+      setError('Slug is required — use a short URL segment like my-case-study');
+      return;
+    }
     await runAction('Saving research…', async () => {
-      const payload = { ...researchDraft };
+      const payload = { ...researchDraft, slug };
       if (payload.id) {
         await readJson(`/api/admin/research/${payload.id}`, {
           method: 'PUT',
@@ -166,7 +171,11 @@ export function AdminDashboard() {
       }
       await loadAll();
       setResearchDraft(null);
-      setStatus('Research saved.');
+      setStatus(
+        payload.published
+          ? 'Research saved. It should appear on the homepage within a few seconds.'
+          : 'Research saved as draft — check Published to show it on the homepage.'
+      );
     });
   }
 
@@ -504,15 +513,25 @@ export function AdminDashboard() {
 
           {researchDraft ? (
             <div className="admin-card admin-grid">
+              {!researchDraft.published ? (
+                <p className="admin-draft-banner" role="status">
+                  Draft — this case study is hidden from the public Research list until
+                  Published is checked.
+                </p>
+              ) : null}
               <div className="admin-grid admin-grid-2">
                 <div className="admin-field">
-                  <label>Slug</label>
+                  <label>Slug (URL segment)</label>
                   <input
                     value={researchDraft.slug}
+                    placeholder="my-case-study"
                     onChange={(e) =>
                       setResearchDraft({ ...researchDraft, slug: e.target.value })
                     }
                   />
+                  <p className="admin-hint" style={{ marginTop: '0.35rem' }}>
+                    Public URL: /work/{normalizeSlug(researchDraft.slug) || '…'}
+                  </p>
                 </div>
               </div>
               <div className="admin-field">

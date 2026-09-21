@@ -6,6 +6,7 @@ import {
   getResearchById,
   updateResearch
 } from '@/lib/cms/queries';
+import { normalizeSlug } from '@/lib/cms/slug';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -26,9 +27,13 @@ export async function PUT(request: Request, { params }: Params) {
   try {
     await requireCmsAdmin();
     const id = Number((await params).id);
+    const existing = await getResearchById(id);
+    if (!existing) return jsonError('Not found', 404);
     const body = await request.json();
+    const slug = normalizeSlug(String(body.slug ?? ''));
+    if (!slug) return jsonError('Slug is required (use letters and numbers)', 400);
     const item = await updateResearch(id, {
-      slug: body.slug,
+      slug,
       title: body.title,
       description: body.description,
       dateDisplay: body.dateDisplay,
@@ -39,7 +44,10 @@ export async function PUT(request: Request, { params }: Params) {
       sortOrder: body.sortOrder
     });
     if (!item) return jsonError('Not found', 404);
-    revalidatePublicContent();
+    revalidatePublicContent({ workSlug: item.slug });
+    if (existing.slug !== item.slug) {
+      revalidatePublicContent({ workSlug: existing.slug });
+    }
     return NextResponse.json(item);
   } catch (response) {
     if (response instanceof NextResponse) return response;
