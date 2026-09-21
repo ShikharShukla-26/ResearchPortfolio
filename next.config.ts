@@ -3,23 +3,10 @@ import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
   pageExtensions: ['mdx', 'ts', 'tsx'],
+  // DB-backed redirects are optional; loading postgres from next.config breaks
+  // Vercel builds when POSTGRES_URL is set (compiled config path resolution).
   async redirects() {
-    if (!process.env.POSTGRES_URL && !process.env.DATABASE_URL) {
-      return [];
-    }
-
-    const { getSql } = await import('./lib/cms/db');
-    const sql = getSql();
-    const redirects = await sql`
-      SELECT source, destination, permanent
-      FROM redirects;
-    `;
-
-    return redirects.map(({ source, destination, permanent }) => ({
-      source,
-      destination,
-      permanent: !!permanent
-    }));
+    return [];
   },
   experimental: {
     mdxRs: { mdxType: 'gfm' }
