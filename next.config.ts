@@ -4,7 +4,7 @@ import createMDX from '@next/mdx';
 const nextConfig: NextConfig = {
   pageExtensions: ['mdx', 'ts', 'tsx'],
   async redirects() {
-    if (!process.env.POSTGRES_URL) {
+    if (!process.env.POSTGRES_URL && !process.env.DATABASE_URL) {
       return [];
     }
 

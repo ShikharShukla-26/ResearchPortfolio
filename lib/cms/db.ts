@@ -2,16 +2,21 @@ import postgres from 'postgres';
 
 let sql: ReturnType<typeof postgres> | null = null;
 
+function postgresUrl() {
+  return process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
+}
+
 export function cmsEnabled() {
-  return Boolean(process.env.POSTGRES_URL);
+  return Boolean(postgresUrl());
 }
 
 export function getSql() {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('POSTGRES_URL is not configured');
+  const url = postgresUrl();
+  if (!url) {
+    throw new Error('POSTGRES_URL (or DATABASE_URL) is not configured');
   }
   if (!sql) {
-    sql = postgres(process.env.POSTGRES_URL, { ssl: 'allow' });
+    sql = postgres(url, { ssl: 'allow' });
   }
   return sql;
 }
