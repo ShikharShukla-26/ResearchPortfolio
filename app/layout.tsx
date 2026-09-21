@@ -1,20 +1,20 @@
 import './globals.css';
+import './site.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
-
-const inter = Inter({ subsets: ['latin'] });
+import { site } from './site-data';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://next-mdx-blog.vercel.app'),
+  metadataBase: new URL('https://shikharshukla.dev'),
   alternates: {
     canonical: '/'
   },
   title: {
-    default: 'John Smith',
-    template: '%s | John Smith'
+    default: 'Shikhar Shukla',
+    template: '%s | Shikhar Shukla'
   },
-  description: 'My portfolio, blog, and personal website.'
+  description:
+    'Behavioral & UX researcher — workplace ethnography, heuristic evaluation and writing on how digital products shape attention.'
 };
 
 export default function RootLayout({
@@ -23,15 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className}`}>
-      <body className="antialiased tracking-tight">
-        <div className="min-h-screen flex flex-col justify-between pt-0 md:pt-8 p-8 dark:bg-zinc-950 bg-white text-gray-900 dark:text-zinc-200">
-          <main className="max-w-[60ch] mx-auto w-full space-y-6">
-            {children}
-          </main>
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+      <body className="antialiased">
+        <main className="site-shell">
+          <article className="content-frame">{children}</article>
           <Footer />
-          <Analytics />
-        </div>
+        </main>
+        <Analytics />
       </body>
     </html>
   );
@@ -39,27 +37,25 @@ export default function RootLayout({
 
 function Footer() {
   const links = [
-    { name: '@johnsmith', url: 'https://x.com/johnsmith' },
-    { name: 'youtube', url: 'https://www.youtube.com/@johnsmith' },
-    { name: 'linkedin', url: 'https://www.linkedin.com/in/johnsmith' },
-    { name: 'github', url: 'https://github.com/johnsmith' }
+    { name: 'LinkedIn', url: site.linkedin },
+    { name: 'Substack', url: site.substack },
+    { name: 'Email', url: `mailto:${site.email}` },
+    { name: 'Resume', url: site.resume }
   ];
 
   return (
-    <footer className="mt-12 text-center">
-      <div className="flex justify-center space-x-4 tracking-tight">
-        {links.map((link) => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 dark:text-gray-500 hover:text-blue-500 transition-colors duration-200"
-          >
-            {link.name}
-          </a>
-        ))}
-      </div>
+    <footer className="site-footer">
+      {links.map((link) => (
+        <a
+          key={link.name}
+          href={link.url}
+          className="text-nav"
+          target={link.url.startsWith('/') ? undefined : '_blank'}
+          rel={link.url.startsWith('/') ? undefined : 'noopener noreferrer'}
+        >
+          {link.name}
+        </a>
+      ))}
     </footer>
   );
 }

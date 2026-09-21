@@ -1,0 +1,105 @@
+export const metadata = {
+  title: 'Wise India — Onboarding Cognitive Walkthrough',
+  description:
+    'Can an India-based first-time visitor tell whether they can use Wise, and what it will cost? A single-evaluator cognitive walkthrough of wise.com\'s transfer and signup flow against Nielsen\'s 10 heuristics.',
+  alternates: { canonical: '/work/wise' }
+};
+
+# Wise India — Onboarding Cognitive Walkthrough
+
+<Meta>Cognitive walkthrough and heuristic evaluation · Single evaluator · 16 screenshots, 6 decision points · Independent, unaffiliated · 16 September 2026</Meta>
+
+**Can an India-based first-time visitor tell whether they can use Wise, and what it will cost?**
+
+The transfer calculator is easy to find and easy to read: cost and an arrival estimate were both reached within a few clicks. The journey does not resolve whether an India-based visitor is eligible. Selecting "Personal" and "India" during signup returned the form to its previous screen with no message — and the likely explanation was only found through an external search, not through Wise.
+
+The priority opportunity is not a visual or copy refinement. It is that a decision the product has already made — who is eligible — is invisible to the person it affects, at the exact moment they are trying to act on it.
+
+<Callout title="Confirmed vs. needs verification">
+**Confirmed, directly observed:** the signup form silently returns to the start screen for the Personal + India combination, with zero error message. Screenshotted, not inferred.
+
+**Not yet confirmed:** the specific reason — that Wise does not currently issue personal accounts to Indian residents — came from an external search, not from Wise. Confirm with product or compliance before shipping copy that names it; otherwise use generic decline wording.
+</Callout>
+
+## Scenario and method
+
+**Scenario.** First-time visitor resident in India, no existing account, using only public pages, trying to answer four questions: what a transfer costs, how long it takes, whether they are eligible, and how to open an account.
+
+**Method.** One expert cognitive walkthrough on desktop Chrome across six decision points, applying the four cognitive-walkthrough questions at each step (right outcome? notice the action? action → outcome? see progress?) and mapping issues to Nielsen's 10 heuristics. No account was created and no financial data was entered. Template adapted from Nielsen Norman Group's Heuristic Evaluation Workbook.
+
+## Walkthrough at a glance
+
+<Table
+  data={{
+    headers: ['Step', 'Outcome', 'Main issue', 'Severity'],
+    rows: [
+      ['1. Homepage', 'Succeeded', 'None significant', '—'],
+      ['2. Navigation to fees', 'Succeeded with effort', 'Fees sit behind a hover sub-menu', 'Low'],
+      ['3. Transfer calculator', 'Partially succeeded', 'No reference rate; arrival estimate has no time zone', 'Medium'],
+      ['4. Fee breakdown', 'Partially succeeded', '"Per month" framing not understood', 'Low'],
+      ['5. Eligibility search', 'Failed', 'India eligibility not found across three surfaces', 'High'],
+      ['6. Account creation', 'Failed', 'Personal + India returns the form with no message', 'High']
+    ]
+  }}
+/>
+
+## Findings
+
+<Table
+  data={{
+    headers: ['ID', 'Finding', 'Product risk', 'Sev.', 'Recommended action'],
+    rows: [
+      ['F1', 'Personal + India signup loops silently', 'Abandonment at the highest-intent moment; behaviour reads as a bug, not a policy', 'High', 'Show an explicit restriction message at the point of selection'],
+      ['F2', 'India eligibility not discoverable pre-signup', 'Visitor must leave the site to find an answer; support load and lost conversion', 'High', 'Display country-aware eligibility on pricing and send-money pages'],
+      ['F3', 'Arrival estimate carries no time zone', '"By Thursday 3:00 AM" may be read as IST or recipient-local time', 'Medium', 'Label the estimate with an explicit time zone'],
+      ['F4', 'No reference rate beside Wise\'s rate', 'Comparison happens on a competitor\'s page, not Wise\'s', 'Medium', 'Show the mid-market rate alongside the quoted rate'],
+      ['F5', '"Estimated amount per month" is ambiguous', 'Minor confusion in the fee-comparison module', 'Low', 'One line of clarifying microcopy'],
+      ['F6', 'Pricing reachable only via hover sub-menu', 'Added discovery effort; goal still reached', 'Low', 'Add a visible top-level pricing entry']
+    ]
+  }}
+/>
+
+### Journey A — Can I use Wise, and what will it cost?
+
+Cost discovery worked. The calculator was the strongest part of the journey: entering ₹800,000 for an INR→USD transfer returned the recipient amount, total fees and an arrival estimate on one card. Two gaps remained, both about interpretation rather than availability. The information needed to judge the quote is not on the page — so I opened other sites to supply it. That is a finding about the page, not about the rate.
+
+### Journey B — Can I actually open an account?
+
+Eligibility could not be located through the send-money page, the FAQ or a Help Centre search using the terms tested; the Help Centre returned restriction articles for other countries. Signup then failed silently: "Welcome to Wise" shows account type and residence country without indicating order; choosing "Personal" returns to the welcome screen rather than advancing, and selecting "India" produces the same return. No error, warning or explanation — so it is impossible to tell whether the input was accepted, rejected or lost.
+
+### What worked well
+
+- The homepage hero communicated the service purpose without interpretation.
+- The calculator's "you send exactly" / "recipient gets" pattern mapped directly onto the question I was holding.
+- Total fees and arrival estimate were shown on the same card as the converted amount, not deferred.
+
+## Recommendations
+
+1. **Replace the silent signup reset with an explicit restriction message.** State the reason in place, with a route to any available alternative, the moment the blocked combination is detected. Confirm the specific reason with Wise before naming India in live copy.
+2. **Surface country eligibility before signup begins.** A short, country-aware eligibility line on the pricing and send-money pages once the country is known.
+3. **Give the calculator enough context to be interpreted.** A mid-market reference rate beside the quoted rate, and an explicit time zone on the arrival estimate.
+
+The full review includes before/after mockups for each recommendation — illustrative wording only, pending product and compliance confirmation.
+
+## Top three by heuristic
+
+- **H9 — Help users recognize, diagnose and recover from errors.** No error message when signup fails. The single highest-impact fix.
+- **H6 — Recognition rather than recall.** Eligibility is not recognizable in context; the visitor must recall and search for information the product already has.
+- **H1 — Visibility of system status.** Zero feedback after a blocked selection reads as a broken product, not a policy.
+
+## What I would validate with real users
+
+Moderated sessions with 5–8 first-time, India-based visitors. Measure task completion on the four questions, external tab-switches during the calculator step, and signup completion or explicit understanding of why signup is unavailable. Hypotheses: visitors shown an inline restriction message will correctly state their eligibility status at a higher rate than those who see the silent reset; visitors shown a reference rate will leave the page to compare less often.
+
+## Limitations
+
+- Expert evaluation of one scenario by a single evaluator — not a usability study with participants, and not evidence of how often these issues occur.
+- One context: desktop Chrome, one country, one currency corridor, one session.
+- No analytics, conversion data, support-ticket volume or internal business context.
+- The eligibility explanation came from an external search and has not been confirmed against Wise's official policy.
+- Rate comparison figures were captured at different moments on different sites and are indicative only.
+
+## Downloads
+
+- [Brief (PPTX, 6 slides)](/work/wise-brief.pptx)
+- [Full review with walkthrough log and 16 screenshots (DOCX)](/work/wise-full-review.docx)

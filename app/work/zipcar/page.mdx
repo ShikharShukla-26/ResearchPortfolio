@@ -1,0 +1,118 @@
+export const metadata = {
+  title: 'Zipcar — First-Time Experience Audit',
+  description:
+    'An N=1 exploratory walkthrough and heuristic evaluation of zipcar.com\'s homepage and booking flow, surfacing two testable friction points and the cheapest tests to validate them.',
+  alternates: { canonical: '/work/zipcar' }
+};
+
+# Zipcar — First-Time Experience Audit
+
+<Meta>FTUE walkthrough and heuristic evaluation · N=1 self-observation · Self-initiated, unaffiliated · 2026</Meta>
+
+Two things I could not make sense of as a first-time visitor to zipcar.com. Neither is a validated finding. Both looked inexpensive to test with real users — that is what the rest of this is for.
+
+<Callout title="Reading rule">
+Wherever this audit says "may" or "hypothesis", that is a conjecture from one person's walkthrough, not a measured result. Nothing here should drive a roadmap decision without testing with real, multiple users.
+</Callout>
+
+## Method and journey
+
+One participant — me — across two homepage runs (a first-time run and a repeat run), plus a self-run heuristic pass. Think-aloud narration and screen-by-screen recording throughout. No other participants were recruited.
+
+The journey had eight steps: landing page → interpret product → booking form → search results → car selection → map exploration → modify search → potential friction. Every finding sits on one of these steps, most of them before step four.
+
+## Finding 01 — P0, validate first
+
+### The service category is not clear for several seconds
+
+**Observation.** In the first seconds on the homepage I read Zipcar as a used-car marketplace. The hero rendered instantly; the booking form (pick-up/return fields) loaded 2–3 seconds later. My read shifted again mid-load: "taxi site" at "pick up," then "car rental" once "return" appeared.
+
+**Interpretation.** The first viewport alone did not establish the car-sharing model for me — that only resolved once the delayed booking form finished loading and I read its fields.
+
+**Hypothesis (untested).** Stating the model explicitly and immediately — a static line such as "Book a car by the hour or day" — may shorten this comprehension delay for other first-time visitors.
+
+## Finding 02 — P1, validate next
+
+### Editing the form gives no signal that anything happened
+
+**Observation.** After changing the return time three times, results did not update. Each time I paused 2–3 seconds expecting an automatic refresh, then had to locate and click "Search" on the far right before seeing updated results.
+
+**Interpretation.** With no visible state change after editing a field, I assumed the system had not registered my change — not that a manual step was required.
+
+**Hypothesis (untested).** A signal tied to the moment of change, not only the Search button's location, may resolve this faster than either full auto-refresh or the current silent state. A manual click is not inherently wrong — refreshing on every edit could be irritating. The right call depends on how often people edit the form after landing, which I do not have data on.
+
+## Other observations
+
+<Table
+  data={{
+    headers: ['Finding', 'Observation', 'Hypothesis (untested)', 'Priority'],
+    rows: [
+      ['CTA hierarchy', '"Join now" sits at nearly the same value as the hero background; I only noticed the white Search button unprompted.', 'A CTA in a color the background does not already own (Zipcar\'s gold) may be noticed more reliably.', 'P1'],
+      ['Map behavior', 'Panning toward a different address made previously visible pins disappear until I re-searched.', 'Fetching pins for the visible map area as it is panned may reduce false "no cars here" impressions.', 'P2'],
+      ['Gas label', '"Gas ~40%" appears with no plain-language explanation of what it means or who pays.', 'Regular car-share users read this like a battery level; the real gap is Zipcar\'s fuel policy being unfamiliar to newcomers.', 'P2']
+    ]
+  }}
+/>
+
+Priority reflects validation urgency, not engineering priority.
+
+## Business impact — what I would measure
+
+<Table
+  data={{
+    headers: ['UX finding', 'Business question', 'Metric to watch'],
+    rows: [
+      ['Category clarity delay', 'Does first-visit comprehension affect homepage → search conversion?', 'Homepage → search conversion; 5-second comprehension test success rate'],
+      ['No search-change feedback', 'Do visitors retry, abandon, or submit stale searches?', 'Search abandonment; date/time edits per session; search retries'],
+      ['Weak CTA hierarchy', 'Does it reduce sign-up or booking engagement?', 'Sign-up click-through rate from homepage'],
+      ['Map pins disappear on pan', 'Might visitors conclude no cars are available?', 'Map-pan → re-search rate; "no cars" impressions'],
+      ['Gas label unclear', 'Does this create hesitation or support questions?', 'Fuel-related support contact rate; drop-off at car-detail step']
+    ]
+  }}
+/>
+
+## Validation plan — two cheap tests before anyone builds anything
+
+### Test 1 — Category comprehension (5 users)
+
+- **Research question.** Can first-time visitors correctly identify Zipcar's service within 5 seconds?
+- **Task.** Show the homepage for 5 seconds, hide it, ask "What do you think this company does?"
+- **Success.** 4–5 of 5 identify car-sharing / hourly-or-daily rental, unprompted.
+- **Approaches to test.** A static sub-headline; a skeleton screen instead of a blank pill; category-specific hero imagery.
+
+### Test 2 — Search-state comprehension (5 users)
+
+- **Research question.** Do people know whether on-screen results reflect their latest change?
+- **Task.** After changing return time, ask "Are these results up to date with what you just changed?"
+- **Success.** Correctly states current/not current, and can point to what told them so.
+- **Approaches to test.** A visual "ready to update" state; debounced auto-refresh; keep explicit Search but flag it the moment an input changes.
+
+## Heuristic pass
+
+<Table
+  data={{
+    headers: ['Heuristic', 'Observation', 'Severity'],
+    rows: [
+      ['Visibility of system status', 'Booking widget shows a loading spinner while the rest of the hero has already rendered.', 'Medium'],
+      ['Visibility of system status', 'After changing pick-up/return, nothing indicates whether the new query applied.', 'Medium'],
+      ['Match between system and real world', '"Gas ~40%" appears with no plain-language explanation.', 'Low–Med'],
+      ['Consistency and standards', 'Primary and secondary CTAs render in close to the same green as the background.', 'Medium'],
+      ['User control and freedom', 'Panning the map hides previously visible car pins without explaining why.', 'Med–High']
+    ]
+  }}
+/>
+
+**What already works.** The half-cut mobile visual in "How Zipcar Works" broke my banner-blindness and got me reading all four steps — worth keeping and extending, not just fixing what is broken.
+
+## External corroboration
+
+I checked my own reaction against a small number of public reviews (Trustpilot, general search) rather than relying on secondhand claims. No direct match for "misread as used-car marketplace" — that stays unique to this walkthrough. A verified review describing the app and filters as "confusing" is adjacent to, but not a precise match for, the no-feedback-after-editing behavior. Fuel-card frustration is widely reported, but about physical cards and billing, not the on-screen label. External evidence increases the case for testing; it does not validate the mechanism.
+
+## The takeaway
+
+Zipcar does not necessarily need more information on the first screen. It needs the existing information to become understandable sooner.
+
+## Downloads
+
+- [Brief (PPTX, 4 slides)](/work/zipcar-brief.pptx)
+- [Full FTUE audit (PPTX, 11 slides)](/work/zipcar-ftue-audit.pptx)

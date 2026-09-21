@@ -1,0 +1,114 @@
+export const metadata = {
+  title: 'Decathlon.in — Heuristic Evaluation of the Purchase Journey',
+  description:
+    'A solo heuristic evaluation of buying a cycle on Decathlon.in, search to payment, against Nielsen\'s 10 usability heuristics. Eight findings, three high-priority, all fixable without a redesign.',
+  alternates: { canonical: '/work/decathlon' }
+};
+
+# Decathlon.in — Heuristic Evaluation of the Purchase Journey
+
+<Meta>Heuristic evaluation · Nielsen's 10 usability heuristics · Single evaluator · Self-initiated, unaffiliated · September 2026</Meta>
+
+I bought a cycle on Decathlon.in. It cannot be returned — and nothing on the site tells the shopper that before they pay.
+
+This is an eight-finding heuristic evaluation of the full purchase journey (search → payment), mapped to Jakob Nielsen's 10 usability heuristics. Three findings are high priority. All three are fixable without a redesign.
+
+## Task and method
+
+**Task.** Buy a cycle for exercise, start to finish: home page to payment confirmation, the way an ordinary shopper would.
+
+**Method.** Walked step by step against seven guiding questions on discoverability, pricing, cart control, policy clarity and checkout feedback; each friction point mapped to the heuristic it violates. Six heuristics were the original focus; a seventh — Consistency and Standards — surfaced on its own during testing.
+
+1. Can I compare products without opening many tabs?
+2. Are delivery charges shown early enough?
+3. Are taxes and fees transparent?
+4. Can quantity be changed or an item removed easily?
+5. Are return and warranty conditions understandable?
+6. Is "Buy now" / "Add to cart" visually clear?
+7. Does checkout show progress?
+
+**Funnel.** Home → Search → Product page → Cart → Delivery → Payment.
+
+## Highest-impact finding
+
+### This cycle cannot actually be returned
+
+Buried in the return policy's eligibility table — reachable only via a footer link, several scrolls down the product page — is the line that mattered most before checkout: Bulky/Technical Equipment, the category covering cycles, is not eligible for return or refund. Only a replacement within 30 days is available; even a size or colour exchange is off the table.
+
+Nothing on the product page, cart or checkout discloses this. A shopper who assumes the standard 30-day return shown elsewhere on the same page learns otherwise only by going looking for it — usually after paying.
+
+**Business impact.** This is the kind of gap that turns into a return dispute, a support ticket or a public complaint — discovered after the sale, not before it.
+
+**Heuristics implicated.** Recognition rather than recall · Match between system and the real world.
+
+## All eight findings
+
+<Table
+  data={{
+    headers: ['Finding', 'Heuristic', 'Location', 'Priority', 'Fix effort'],
+    rows: [
+      ['Cycles ineligible for return/refund — undisclosed before purchase', 'Recognition vs recall', 'Return policy (footer-only link)', 'High', 'Copy change'],
+      ['"Add to cart" permanently locks to "Go to cart"; a second unit cannot be added without refresh', 'Consistency and standards', 'Product page', 'High', 'Button fix'],
+      ['Qty "−" silently does nothing at Qty = 1; item only removable via separate trash icon', 'Error prevention', 'Cart', 'High', 'Small eng fix'],
+      ['Delivery fee appears only at checkout step 2, labelled "Convenience fee"', 'Match with real world', 'Cart → Delivery', 'Med', 'Copy change'],
+      ['No side-by-side comparison; two cycles means two browser tabs', 'Consistency and standards', 'Listing / product page', 'Med', 'Project'],
+      ['Full login plus saved address required just to see the delivery fee; no "Buy now"', 'User control and freedom', 'Delivery step', 'Med', 'Medium eng'],
+      ['Return and warranty terms absent from product page and cart', 'Recognition vs recall', 'Product and cart pages', 'Med', 'Copy change'],
+      ['15–20 s payment redirect with zero loading feedback; progress bar too faint to see', 'Visibility of system status', 'Checkout', 'Med', 'Small eng fix']
+    ]
+  }}
+/>
+
+## Findings by heuristic
+
+### Visibility of system status
+
+Clicking "Proceed to pay" triggers a 15–20 second wait with no spinner, progress bar or message — long enough that I reconsidered the ₹6,999 purchase mid-wait. A step progress bar does exist, but its fill colour barely contrasts with the white background. *Recommendation:* add a loading indicator with reassuring microcopy for the payment redirect; restyle the progress bar with real contrast.
+
+### Match between system and the real world
+
+The homepage opens with a full-width discount banner before any products, and category pages repeat the pattern. Real-world shopping runs the other way: item, then price, then discount. The delivery charge is labelled "Convenience fee" and is not shown until the delivery step, three clicks into checkout. *Recommendation:* lead templates with products; rename to "Delivery fee" and surface it on the cart page.
+
+### Consistency and standards
+
+There is no way to compare two products side by side — comparing the BTWIN against the Rockrider meant a second browser tab. "Add to cart" permanently swaps to "Go to cart"; there is no way to add a second unit without refreshing, which then loses that state again. *Recommendation:* a lightweight compare tray (2–3 items); replace the one-way button swap with a persistent quantity stepper, as the cart page already does.
+
+### User control and freedom
+
+Checking delivery availability and cost requires being logged in with a saved address — no pincode-only preview, unlike every other browsing step. And there is no "Buy now": every purchase is routed through Add to cart → Cart → Delivery → Payment. *Recommendation:* pincode-only delivery check before login; consider a "Buy now" path for single-item purchases.
+
+### Error prevention and recovery
+
+The same "−" control behaves two ways: with two units it decrements; at exactly one unit it does nothing — no message, no disabled state. The only way to remove the item is a separate trash icon, found after several dead clicks. A control that looks live but does nothing is exactly where shoppers abandon carts or file "broken site" complaints. *Recommendation:* make the state visible — grey it out or swap to the trash icon at quantity one — and say so when an action cannot complete.
+
+### Recognition rather than recall
+
+Return and warranty terms are not shown on the product page or the cart — the two places a shopper is actually deciding. The only path is a footer link, and the footer does not exist on the cart page at all. The section that answers "can I return this?" sits below several paragraphs of repeated boilerplate. *Recommendation:* a short return/warranty summary on the product page; a consistent footer; the eligibility table above the intro text.
+
+## What would move the needle
+
+### Ship in two weeks — no roadmap needed
+
+- Rename "Convenience fee" to "Delivery fee"
+- Restyle the checkout progress bar for real contrast
+- Add a one-line return/refund disclosure on cycle and bulky-item pages
+- Add a loading spinner for the payment redirect
+
+### Needs a product decision
+
+- Product comparison across listings
+- Persistent "add to cart" as a quantity stepper, not a one-way button
+- Pincode-only delivery check before requiring login
+- Fix the qty "−" control's silent failure at Qty = 1
+- Reordered templates: products before promos
+
+Six of the ten heuristics surfaced friction somewhere in a single purchase — most of it fixable without a redesign, just a more honest default: show the cost, the policy and the state of the system before the shopper has to go looking for them.
+
+## Limitations
+
+Single evaluator, single task, one session on desktop. Findings are expert-review hypotheses, not measured usability rates or prevalence estimates. No analytics or support-ticket data was available.
+
+## Downloads
+
+- [Brief (PPTX, 3 slides)](/work/decathlon-brief.pptx)
+- [Full heuristic evaluation with annotated screenshots (PPTX, 11 slides)](/work/decathlon-heuristic-evaluation.pptx)

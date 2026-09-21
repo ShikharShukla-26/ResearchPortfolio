@@ -1,0 +1,151 @@
+export const metadata = {
+  title: 'Surface Compliance, Silent Resistance',
+  description:
+    'A six-month insider workplace ethnography of a seven-person software team, and the Control–Trust–Output Loop that explains why control policies reproduced the problem they were meant to solve.',
+  alternates: { canonical: '/work/surface-compliance' }
+};
+
+# Surface Compliance, Silent Resistance
+
+<Meta>Workplace ethnography · Independent behavioral research · Part 1 of 2 · January – June 2026</Meta>
+
+A seven-person software development team misses a client deadline. Management responds with a wave of structural control policies: split lunch groups, reduced break access, removed meeting rooms, uncompensated overtime. The stated goal is to restore discipline and productivity.
+
+Output declines. Voluntary overtime disappears. Every developer begins an active job search within six months. The intern who resigned has blame publicly assigned to her — on her last day.
+
+This study documents not just what happened, but why the outcome was structurally predictable. The gap between management's assumption and behavioral reality is not a failure of character. It is a systems failure of diagnosis: the productivity problem was caused by unclear requirements and deadlines set without developer input, and none of the policies addressed either. They controlled where people ate lunch.
+
+## Research question
+
+When management introduces control-based policies in response to a perceived productivity problem, what behavioral patterns emerge in the affected team — and what do those patterns reveal about the gap between policy intent and behavioral outcome?
+
+## Context and method
+
+<Table
+  data={{
+    headers: ['', ''],
+    rows: [
+      ['Organization', 'Small software development firm, Vadodara, India'],
+      ['Duration', 'Six months of continuous direct observation (Jan – Jun 2026)'],
+      ['Observer position', 'Active team member with real-time access to policy rollout and management interactions'],
+      ['Team', 'Seven developers; one technical boss (weekly), one non-technical boss (daily)'],
+      ['Control group', 'Adjacent recruiter team — same office, different rule set, no reported frustration'],
+      ['Method', 'Insider ethnography and informal group discussion, cross-referenced against a Business Analyst who bridges both teams']
+    ]
+  }}
+/>
+
+The trigger event was a missed client deadline. Management's interpretation: employee discipline and presence are insufficient. The observation period captures the full arc from the first policy to active collective disengagement.
+
+## What I observed
+
+### The door
+
+Three months into the new policies, the Team Lead — confident by default, years in the role — began entering the manager's office differently from every other door in the building. Everywhere else: push fully open, walk in, release the handle. At the manager's office: push slightly, cross one leg inside, release the handle mid-entry, then rush the second leg through before the door closes — as if forcing himself through a gap that is continuously narrowing.
+
+The gap he navigated physically was the one he navigated mentally: the space between what the manager wanted to hear and what was true about the project. The door was not the obstacle. The door was a mirror.
+
+### The lunch table
+
+New policy: no more than four employees at lunch at once, in two 45-minute shifts. Stated rationale: emergency coverage. The team identified the real intent — fragmentation — within a week and named it out loud. Both groups finished in twenty minutes and ended up on the ground floor together anyway. Management noticed, and a second policy fixed the second shift to a full 45 minutes regardless.
+
+What changed permanently was the table. The team now eats in front of the washroom entrance, visible to everyone on the floor. The conference room they had cleaned after every use was removed from access. The indignity was accepted. The logic was not. The divide-and-conquer policy produced measurably tighter cohesion — a result consistent with Sherif and Tajfel, and the opposite of intent.
+
+### The parallel team
+
+The Business Analyst moves between both teams daily. His consistent read: the development team is frustrated, the recruiter team is not. The recruiter team has no lunch policy, no one-minute-late penalties, no reduced breaks. Same office, same building. The productivity problem only exists in the development pipeline — because only the development team's deadlines are set without their input. The policy addressed the symptom in the team that was easiest to control, not the process that was broken.
+
+## Findings
+
+### 1. Disengagement has an identifiable inflection point
+
+The arc followed six phases:
+
+1. New office; the non-technical boss moves to daily attendance for the first time.
+2. One developer receives concentrated criticism; others observe and form expectations.
+3. Remaining developers assume the situation is temporary and deadline-specific.
+4. Similar treatment expands to the full team.
+5. Team members stop expressing expectations of improvement.
+6. Compliance becomes mechanical; discretionary effort disappears; job searching begins.
+
+The shift from frustrated-but-present to actively disengaged did not happen when policies accumulated. It happened when a visible scapegoating event — blame pre-assigned to a departing intern in front of a client — confirmed that management's response to any failure is blame assignment rather than diagnosis. The quantity of policies was not the threshold. The quality of perceived injustice was.
+
+### 2. Two managers optimized for incompatible KPIs
+
+The technical boss was optimizing for delivery and retention; the non-technical boss for the client relationship. The development team absorbed the conflict. Responsibility for a reconciliation model was communicated differently to the client, the Team Lead and the team — and the Team Lead learned he owned it from the client's email.
+
+### 3. The two people who sustained output did so through external anchors
+
+The Team Lead and the Business Analyst kept delivering — not out of trust in management, but through professional identity and direct client appreciation. Their effort was anchored outside the loop, which is why it lasted longer and why it could not last indefinitely.
+
+## The Control–Trust–Output Loop
+
+<Table
+  data={{
+    headers: ['Stage', 'What happens'],
+    rows: [
+      ['01', 'Management perceives an output problem'],
+      ['02', 'Assumes the cause is employee behavior'],
+      ['03', 'Introduces structural controls (policy)'],
+      ['04', 'Employees read controls as a distrust signal'],
+      ['05', 'Trust decreases'],
+      ['06', 'Discretionary effort decreases'],
+      ['07', 'Output decreases further'],
+      ['08', 'Management introduces more controls — loop repeats, root cause untouched']
+    ]
+  }}
+/>
+
+The loop is self-reinforcing: the fix — more control — produces the symptom it was meant to solve. The root cause, requirement ambiguity and deadline mismanagement, stays untouched through every cycle.
+
+## Hypotheses
+
+<Table
+  data={{
+    headers: ['', 'Prediction'],
+    rows: [
+      ['H1', 'As control policies increase, voluntary overtime decreases and open job-search signaling increases within 30 days.'],
+      ['H2', 'Policies perceived as selectively targeting one team accelerate that team\'s cohesion against management.'],
+      ['H3', 'Deadline accuracy correlates more strongly with requirement clarity than with hours worked or office presence.']
+    ]
+  }}
+/>
+
+## Interventions I would design and test
+
+1. **Discovery sprint.** No development sprint begins without a written user story approved by both the client and a developer. Run for one delivery cycle; measure whether deadline accuracy improves. If misses drop by half, the control policies were solving the wrong problem.
+2. **Developer in the room.** One developer in every client deadline discussion for 60 days. Track whether committed timelines change and whether shorter, developer-free timelines consistently miss.
+3. **Outcome metrics, not presence.** Replace presence tracking with features shipped, post-release bug rate and client satisfaction per cycle.
+4. **Structured pulse survey with a decision trigger.** Five items on a five-point scale (policy rationale understood, policies will help, I feel trusted, root causes are investigated fairly, I plan to be here in six months) at baseline, week two and week six. If perceived trust or retention intention falls by more than one point, policy rationale is reviewed before any further control is introduced. A survey without a trigger is monitoring, not intervention.
+
+## Limitations
+
+- **Single site.** Mitigated by the adjacent recruiter team as a natural internal control group.
+- **Insider bias.** The observer was affected by the policies and was job-searching during the study. Mitigated by cross-referencing against the Business Analyst, who was subject to neither policy set.
+- **No formal interviews.** Naturalistic observation traded structure for reduced social-desirability bias and access to unguarded behavior.
+- **Observation window closed at month six.** The loop's next iteration is not in this data — that is what [Part 2](/work/surface-compliance-exit-arc) documents.
+- **Observer ethics.** A colleague's visible distress went unaddressed by the team, including the observer. That paralysis was itself a product of the environment being studied.
+
+## Skills demonstrated
+
+<Table
+  data={{
+    headers: ['Skill', 'Application', 'Method'],
+    rows: [
+      ['Insider ethnography', 'Six months embedded observation', 'Naturalistic'],
+      ['Behavioral pattern recognition', 'Door, lunch and job-search signals', 'Observational'],
+      ['Gap analysis', 'Policy intent vs. behavioral outcome', 'Comparative'],
+      ['Power-dynamic mapping', 'Dual-boss KPI conflict', 'Inferential'],
+      ['Comparative analysis', 'Dev team vs. recruiter team', 'Cross-group'],
+      ['Threshold modeling', 'Inflection-point identification', 'Deductive'],
+      ['Hypothesis generation', 'Three operationalized hypotheses', 'Deductive'],
+      ['Intervention design', 'Three interventions plus survey instrument', 'Applied']
+    ]
+  }}
+/>
+
+## Downloads
+
+- [Full case study — Part 1 (DOCX, 18 pages)](/work/surface-compliance-part-1.docx)
+- [Executive brief (PDF, 1 page)](/work/surface-compliance-executive-brief.pdf)
+- Continue to [Part 2 — The Exit Arc](/work/surface-compliance-exit-arc)
