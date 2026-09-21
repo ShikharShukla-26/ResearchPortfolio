@@ -1,6 +1,8 @@
 import '../site.css';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SiteLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {

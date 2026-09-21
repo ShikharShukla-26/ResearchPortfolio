@@ -92,12 +92,19 @@ export function AdminDashboard() {
   async function saveSite() {
     if (!site) return;
     setStatus('Saving site…');
-    await readJson('/api/admin/site', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(site)
-    });
-    setStatus('Site saved.');
+    setError('');
+    try {
+      await readJson('/api/admin/site', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(site)
+      });
+      await loadAll();
+      setStatus('Site saved. Open the homepage in a new tab to confirm changes.');
+    } catch (err) {
+      setStatus('');
+      setError(err instanceof Error ? err.message : 'Save failed');
+    }
   }
 
   async function saveResearch() {

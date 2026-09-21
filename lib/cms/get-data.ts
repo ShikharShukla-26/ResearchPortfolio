@@ -20,61 +20,78 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     return staticPortfolio();
   }
 
+  let site: SiteSettings;
   try {
-    const [site, researchRows, writingRows, links, logs] = await Promise.all([
-      getSiteSettings(),
+    site = await getSiteSettings();
+  } catch {
+    return staticPortfolio();
+  }
+
+  const [researchResult, writingResult, linksResult, logsResult] =
+    await Promise.allSettled([
       listResearch(),
       listWriting(),
       listLinks(),
       listLogs()
     ]);
 
-    const elsewhereLinks = links
-      .filter((l) => l.section === 'elsewhere')
-      .map((l) => ({ href: l.href, label: l.label }));
-    const footerLinks = links
-      .filter((l) => l.section === 'footer')
-      .map((l) => ({ href: l.href, label: l.label }));
+  const researchRows =
+    researchResult.status === 'fulfilled' ? researchResult.value : [];
+  const writingRows =
+    writingResult.status === 'fulfilled' ? writingResult.value : [];
+  const links =
+    linksResult.status === 'fulfilled' ? linksResult.value : [];
+  const logs = logsResult.status === 'fulfilled' ? logsResult.value : [];
 
-    return {
-      site,
-      research: researchRows.map((r) => ({
-        href: `/work/${r.slug}`,
-        title: r.title,
-        date: r.dateDisplay,
-        dateTime: r.dateTime
-      })),
-      writing: writingRows.map((w) => ({
-        href: w.href,
-        title: w.title,
-        date: w.dateDisplay,
-        dateTime: w.dateTime
-      })),
-      elsewhere:
-        elsewhereLinks.length > 0
-          ? elsewhereLinks
-          : elsewhere.map((l) => ({ href: l.href, label: l.label })),
-      footer:
-        footerLinks.length > 0
-          ? footerLinks
-          : [
-              { href: site.linkedin, label: 'LinkedIn' },
-              { href: site.substack, label: 'Substack' },
-              { href: `mailto:${site.email}`, label: 'Email' },
-              { href: site.resume, label: 'Resume' }
-            ],
-      logs: logs.map((log) => ({
-        href: `/logs/${log.slug}`,
-        title: log.title,
-        date: log.dateDisplay,
-        dateTime: log.dateTime,
-        excerpt: log.excerpt,
-        coverImageUrl: log.coverImageUrl
-      }))
-    };
-  } catch {
-    return staticPortfolio();
-  }
+  const elsewhereLinks = links
+    .filter((l) => l.section === 'elsewhere')
+    .map((l) => ({ href: l.href, label: l.label }));
+  const footerLinks = links
+    .filter((l) => l.section === 'footer')
+    .map((l) => ({ href: l.href, label: l.label }));
+
+  return {
+    site,
+    research:
+      researchRows.length > 0
+        ? researchRows.map((r) => ({
+            href: `/work/${r.slug}`,
+            title: r.title,
+            date: r.dateDisplay,
+            dateTime: r.dateTime
+          }))
+        : staticPortfolio().research,
+    writing:
+      writingRows.length > 0
+        ? writingRows.map((w) => ({
+            href: w.href,
+            title: w.title,
+            date: w.dateDisplay,
+            dateTime: w.dateTime
+          }))
+        : staticPortfolio().writing,
+    elsewhere:
+      elsewhereLinks.length > 0
+        ? elsewhereLinks
+        : elsewhere.map((l) => ({ href: l.href, label: l.label })),
+    footer:
+      footerLinks.length > 0
+        ? footerLinks
+        : [
+            { href: site.linkedin, label: 'LinkedIn' },
+            { href: site.substack, label: 'Substack' },
+            { href: `mailto:${site.email}`, label: 'Email' },
+            { href: site.resume, label: 'Resume' }
+          ],
+    logs: logs.map((log) => ({
+      href: `/logs/${log.slug}`,
+      title: log.title,
+      date: log.dateDisplay,
+      dateTime: log.dateTime,
+      excerpt: log.excerpt,
+      coverImageUrl: log.coverImageUrl
+    }))
+  };
 }
 
 export async function getSiteSettingsSafe(): Promise<SiteSettings> {

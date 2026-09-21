@@ -24,6 +24,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({ ok: true });
   } catch (response) {
     if (response instanceof NextResponse) return response;
-    return jsonError('Failed to save site settings', 500);
+    console.error('PUT /api/admin/site failed', response);
+    const message =
+      response instanceof Error ? response.message : 'Failed to save site settings';
+    return jsonError(message, 500);
   }
 }

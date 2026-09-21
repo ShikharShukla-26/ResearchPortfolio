@@ -21,7 +21,12 @@ export function getSql() {
     throw new Error('POSTGRES_URL (or DATABASE_URL) is not configured');
   }
   if (!sql) {
-    sql = postgres(url, { ssl: 'allow' });
+    // Neon / Vercel Postgres pooler requires prepared statements off.
+    sql = postgres(url, {
+      ssl: 'require',
+      prepare: false,
+      max: 5
+    });
   }
   return sql;
 }
