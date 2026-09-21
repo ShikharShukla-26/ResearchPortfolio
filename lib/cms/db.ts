@@ -3,7 +3,11 @@ import postgres from 'postgres';
 let sql: ReturnType<typeof postgres> | null = null;
 
 function postgresUrl() {
-  return process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
+  return (
+    process.env.POSTGRES_URL ??
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_PRISMA_URL
+  );
 }
 
 export function cmsEnabled() {

@@ -5,14 +5,18 @@ import {
   verifyAdminPassword
 } from '@/lib/cms/auth';
 import { cmsEnabled } from '@/lib/cms/db';
+import { getCmsSetupStatus } from '@/lib/cms/setup-status';
 import { bootstrapCms } from '@/lib/cms/seed';
 
 export async function POST(request: Request) {
-  if (!cmsEnabled() || !adminConfigured()) {
+  const status = getCmsSetupStatus();
+  if (!status.ready) {
     return NextResponse.json(
       {
-        error:
-          'Set POSTGRES_URL, ADMIN_PASSWORD, and SESSION_SECRET in the environment.'
+        error: status.missing.join(' '),
+        missing: status.missing,
+        hasDatabase: status.hasDatabase,
+        hasAdmin: status.hasAdmin
       },
       { status: 503 }
     );

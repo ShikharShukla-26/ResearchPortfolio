@@ -1,13 +1,28 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+type SetupStatus = {
+  ready: boolean;
+  hasDatabase: boolean;
+  hasAdmin: boolean;
+  missing: string[];
+};
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [setup, setSetup] = useState<SetupStatus | null>(null);
+
+  useEffect(() => {
+    void fetch('/api/admin/session')
+      .then((res) => res.json())
+      .then((data: SetupStatus) => setSetup(data))
+      .catch(() => {});
+  }, []);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -20,8 +35,8 @@ export default function AdminLoginPage() {
     });
     setLoading(false);
     if (!res.ok) {
-      const data = (await res.json()) as { error?: string };
-      setError(data.error ?? 'Login failed');
+      const data = (await res.json()) as { error?: string; missing?: string[] };
+      setError(data.error ?? data.missing?.join(' ') ?? 'Login failed');
       return;
     }
     router.replace('/admin');
@@ -34,6 +49,28 @@ export default function AdminLoginPage() {
       <p className="admin-hint">
         Sign in to update bios, research, writing, links, and logs after deploy.
       </p>
+
+      {setup && !setup.ready ? (
+        <div className="admin-card admin-grid" style={{ marginBottom: '1rem' }}>
+          <p className="admin-error" style={{ margin: 0 }}>
+            Server setup incomplete:
+          </p>
+          <ul className="admin-hint" style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            {setup.missing.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          {!setup.hasDatabase ? (
+            <p className="admin-hint" style={{ margin: 0 }}>
+              In Vercel: open this project → <strong>Storage</strong> →{' '}
+              <strong>Create database</strong> → <strong>Neon</strong> → connect
+              to <strong>next-mdx-blog</strong> (Production + Preview). Then{' '}
+              <strong>Redeploy</strong> the latest deployment.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       <form onSubmit={onSubmit} className="admin-grid">
         <div className="admin-field">
           <label htmlFor="password">Admin password</label>
@@ -47,14 +84,14 @@ export default function AdminLoginPage() {
           />
         </div>
         {error ? <p className="admin-error">{error}</p> : null}
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading || setup?.ready === false}>
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
       <p className="admin-hint">
-        Requires <code>POSTGRES_URL</code>, <code>ADMIN_PASSWORD</code>, and{' '}
-        <code>SESSION_SECRET</code> on the server. First login runs database
-        setup and imports your existing portfolio content.
+        Use the <code>ADMIN_PASSWORD</code> value from Vercel → Settings →
+        Environment Variables. First successful login imports your portfolio into
+        Postgres.
       </p>
     </div>
   );
