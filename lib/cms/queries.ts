@@ -215,18 +215,19 @@ function mapLog(row: Record<string, unknown>): LogEntry {
     coverImageUrl: (row.cover_image_url as string | null) ?? null,
     dateDisplay: row.date_display as string,
     dateTime: row.date_time as string,
-    published: row.published as boolean
+    published: row.published as boolean,
+    sortOrder: (row.sort_order as number) ?? 0
   };
 }
 
 export async function listLogs(includeDrafts = false) {
   const sql = getSql();
   const rows = includeDrafts
-    ? await sql`SELECT * FROM cms_logs ORDER BY date_time DESC, id DESC`
+    ? await sql`SELECT * FROM cms_logs ORDER BY sort_order ASC, id ASC`
     : await sql`
         SELECT * FROM cms_logs
         WHERE published = TRUE
-        ORDER BY date_time DESC, id DESC
+        ORDER BY sort_order ASC, id ASC
       `;
   return rows.map(mapLog);
 }
@@ -249,7 +250,7 @@ export async function createLog(input: Omit<LogEntry, 'id'>) {
   const sql = getSql();
   const [row] = await sql`
     INSERT INTO cms_logs (
-      slug, title, excerpt, body_md, cover_image_url, date_display, date_time, published
+      slug, title, excerpt, body_md, cover_image_url, date_display, date_time, published, sort_order
     ) VALUES (
       ${input.slug},
       ${input.title},
@@ -258,7 +259,8 @@ export async function createLog(input: Omit<LogEntry, 'id'>) {
       ${input.coverImageUrl},
       ${input.dateDisplay},
       ${input.dateTime},
-      ${input.published}
+      ${input.published},
+      ${input.sortOrder}
     )
     RETURNING *
   `;
@@ -280,6 +282,7 @@ export async function updateLog(id: number, input: Partial<LogEntry>) {
       date_display = ${merged.dateDisplay},
       date_time = ${merged.dateTime},
       published = ${merged.published},
+      sort_order = ${merged.sortOrder},
       updated_at = NOW()
     WHERE id = ${id}
     RETURNING *
@@ -290,4 +293,68 @@ export async function updateLog(id: number, input: Partial<LogEntry>) {
 export async function deleteLog(id: number) {
   const sql = getSql();
   await sql`DELETE FROM cms_logs WHERE id = ${id}`;
+}
+
+export async function createLink(input: Omit<CmsLink, 'id'>) {
+  const sql = getSql();
+  const [row] = await sql`
+    INSERT INTO cms_links (section, label, href, sort_order)
+    VALUES (${input.section}, ${input.label}, ${input.href}, ${input.sortOrder})
+    RETURNING *
+  `;
+  return {
+    id: row.id as number,
+    section: row.section as CmsLink['section'],
+    label: row.label as string,
+    href: row.href as string,
+    sortOrder: row.sort_order as number
+  };
+}
+
+export async function deleteLink(id: number) {
+  const sql = getSql();
+  await sql`DELETE FROM cms_links WHERE id = ${id}`;
+}
+
+async function reorderTable(
+  table: 'cms_research' | 'cms_writing' | 'cms_logs',
+  ids: number[]
+) {
+  const sql = getSql();
+  await sql.begin(async (tx) => {
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (table === 'cms_research') {
+        await tx`UPDATE cms_research SET sort_order = ${i} WHERE id = ${id}`;
+      } else if (table === 'cms_writing') {
+        await tx`UPDATE cms_writing SET sort_order = ${i} WHERE id = ${id}`;
+      } else {
+        await tx`UPDATE cms_logs SET sort_order = ${i} WHERE id = ${id}`;
+      }
+    }
+  });
+}
+
+export async function reorderResearch(ids: number[]) {
+  await reorderTable('cms_research', ids);
+}
+
+export async function reorderWriting(ids: number[]) {
+  await reorderTable('cms_writing', ids);
+}
+
+export async function reorderLogs(ids: number[]) {
+  await reorderTable('cms_logs', ids);
+}
+
+export async function reorderLinks(section: CmsLink['section'], ids: number[]) {
+  const sql = getSql();
+  await sql.begin(async (tx) => {
+    for (let i = 0; i < ids.length; i++) {
+      await tx`
+        UPDATE cms_links SET sort_order = ${i}
+        WHERE id = ${ids[i]} AND section = ${section}
+      `;
+    }
+  });
 }

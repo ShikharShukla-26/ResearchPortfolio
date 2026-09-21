@@ -16,6 +16,8 @@ export async function requireCmsAdmin() {
   if (!(await isAdminSessionValid())) {
     throw NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const { ensureCmsSchema } = await import('./ensure');
+  await ensureCmsSchema();
 }
 
 export function jsonError(message: string, status = 400) {

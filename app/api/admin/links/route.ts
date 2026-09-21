@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireCmsAdmin, jsonError } from '@/lib/cms/api-utils';
 import { revalidatePublicContent } from '@/lib/cms/revalidate-public';
-import { listLinks, replaceLinks } from '@/lib/cms/queries';
+import { createLink, listLinks, replaceLinks } from '@/lib/cms/queries';
 import type { CmsLink } from '@/lib/cms/types';
 
 export async function GET() {
@@ -11,6 +11,29 @@ export async function GET() {
   } catch (response) {
     if (response instanceof NextResponse) return response;
     return jsonError('Failed to load links', 500);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    await requireCmsAdmin();
+    const body = (await request.json()) as {
+      section: CmsLink['section'];
+      label: string;
+      href: string;
+      sortOrder?: number;
+    };
+    const item = await createLink({
+      section: body.section,
+      label: body.label ?? 'New link',
+      href: body.href ?? '#',
+      sortOrder: body.sortOrder ?? 0
+    });
+    revalidatePublicContent();
+    return NextResponse.json(item);
+  } catch (response) {
+    if (response instanceof NextResponse) return response;
+    return jsonError('Failed to create link', 500);
   }
 }
 

@@ -25,7 +25,8 @@ export async function POST(request: Request) {
       coverImageUrl: body.coverImageUrl ? String(body.coverImageUrl) : null,
       dateDisplay: String(body.dateDisplay ?? ''),
       dateTime: String(body.dateTime ?? ''),
-      published: Boolean(body.published ?? true)
+      published: Boolean(body.published ?? true),
+      sortOrder: Number(body.sortOrder ?? 0)
     });
     revalidatePublicContent();
     return NextResponse.json(item);

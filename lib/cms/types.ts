@@ -51,6 +51,7 @@ export type LogEntry = {
   dateDisplay: string;
   dateTime: string;
   published: boolean;
+  sortOrder: number;
 };
 
 export type PortfolioData = {
@@ -78,3 +79,5 @@ export type PortfolioData = {
     coverImageUrl: string | null;
   }>;
 };
+
+export type ReorderKind = 'research' | 'writing' | 'logs' | 'links';

@@ -2,10 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { SortableList } from './sortable-list';
 import type {
   CmsLink,
   LogEntry,
   ResearchItem,
+  ReorderKind,
   SiteSettings,
   WritingItem
 } from '@/lib/cms/types';
@@ -50,7 +52,8 @@ const emptyLog = (): Omit<LogEntry, 'id'> => ({
   coverImageUrl: null,
   dateDisplay: '',
   dateTime: '',
-  published: true
+  published: true,
+  sortOrder: 0
 });
 
 export function AdminDashboard() {
@@ -89,6 +92,42 @@ export function AdminDashboard() {
     void loadAll().catch((err: Error) => setError(err.message));
   }, [loadAll]);
 
+  async function runAction(label: string, action: () => Promise<void>) {
+    setError('');
+    setStatus(label);
+    try {
+      await action();
+    } catch (err) {
+      setStatus('');
+      setError(err instanceof Error ? err.message : 'Action failed');
+    }
+  }
+
+  async function persistReorder(
+    kind: ReorderKind,
+    ordered: Array<{ id: number }>,
+    section?: CmsLink['section']
+  ) {
+    await runAction('Updating order…', async () => {
+      try {
+        await readJson('/api/admin/reorder', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            kind,
+            ids: ordered.map((item) => item.id),
+            section
+          })
+        });
+      } catch (err) {
+        await loadAll();
+        throw err;
+      }
+      await loadAll();
+      setStatus('Order updated.');
+    });
+  }
+
   async function saveSite() {
     if (!site) return;
     setStatus('Saving site…');
@@ -109,88 +148,150 @@ export function AdminDashboard() {
 
   async function saveResearch() {
     if (!researchDraft) return;
-    setStatus('Saving research…');
-    const payload = researchDraft;
-    if (payload.id) {
-      await readJson(`/api/admin/research/${payload.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } else {
-      await readJson('/api/admin/research', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    }
-    await loadAll();
-    setResearchDraft(null);
-    setStatus('Research saved.');
+    await runAction('Saving research…', async () => {
+      const payload = { ...researchDraft };
+      if (payload.id) {
+        await readJson(`/api/admin/research/${payload.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        const { id: _id, ...createPayload } = payload;
+        await readJson('/api/admin/research', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(createPayload)
+        });
+      }
+      await loadAll();
+      setResearchDraft(null);
+      setStatus('Research saved.');
+    });
+  }
+
+  async function deleteResearchItem(id: number) {
+    if (!confirm('Delete this case study permanently?')) return;
+    await runAction('Deleting research…', async () => {
+      await readJson(`/api/admin/research/${id}`, { method: 'DELETE' });
+      if (researchDraft?.id === id) setResearchDraft(null);
+      await loadAll();
+      setStatus('Research deleted.');
+    });
   }
 
   async function saveWritingItem(item: WritingItem) {
-    setStatus('Saving writing…');
-    await readJson(`/api/admin/writing/${item.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(item)
+    await runAction('Saving writing…', async () => {
+      await readJson(`/api/admin/writing/${item.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item)
+      });
+      await loadAll();
+      setStatus('Writing saved.');
     });
-    await loadAll();
-    setStatus('Writing saved.');
+  }
+
+  async function deleteWritingItem(id: number) {
+    if (!confirm('Delete this writing link?')) return;
+    await runAction('Deleting writing…', async () => {
+      await readJson(`/api/admin/writing/${id}`, { method: 'DELETE' });
+      await loadAll();
+      setStatus('Writing deleted.');
+    });
   }
 
   async function addWritingItem() {
-    setStatus('Adding writing…');
-    await readJson('/api/admin/writing', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: 'New essay',
-        href: 'https://',
-        dateDisplay: '',
-        dateTime: '',
-        sortOrder: writing.length,
-        published: true
-      })
+    await runAction('Adding writing…', async () => {
+      await readJson('/api/admin/writing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: 'New essay',
+          href: 'https://',
+          dateDisplay: '',
+          dateTime: '',
+          sortOrder: writing.length,
+          published: true
+        })
+      });
+      await loadAll();
+      setStatus('Writing item added.');
     });
-    await loadAll();
-    setStatus('Writing item added.');
   }
 
   async function saveLinks(section: CmsLink['section']) {
     const sectionLinks = links
       .filter((l) => l.section === section)
-      .map(({ label, href, sortOrder }) => ({ label, href, sortOrder }));
-    setStatus('Saving links…');
-    await readJson('/api/admin/links', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ section, links: sectionLinks })
+      .map(({ label, href }, index) => ({ label, href, sortOrder: index }));
+    await runAction('Saving links…', async () => {
+      await readJson('/api/admin/links', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section, links: sectionLinks })
+      });
+      await loadAll();
+      setStatus('Links saved.');
     });
-    await loadAll();
-    setStatus('Links saved.');
+  }
+
+  async function addLink(section: CmsLink['section']) {
+    await runAction('Adding link…', async () => {
+      await readJson('/api/admin/links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          section,
+          label: 'New link',
+          href: 'https://',
+          sortOrder: links.filter((l) => l.section === section).length
+        })
+      });
+      await loadAll();
+      setStatus('Link added.');
+    });
+  }
+
+  async function deleteLinkItem(id: number) {
+    if (!confirm('Delete this link?')) return;
+    await runAction('Deleting link…', async () => {
+      await readJson(`/api/admin/links/${id}`, { method: 'DELETE' });
+      await loadAll();
+      setStatus('Link deleted.');
+    });
   }
 
   async function saveLog() {
     if (!logDraft) return;
-    setStatus('Saving log…');
-    if (logDraft.id) {
-      await readJson(`/api/admin/logs/${logDraft.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(logDraft)
-      });
-    } else {
-      await readJson('/api/admin/logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(logDraft)
-      });
-    }
-    await loadAll();
-    setLogDraft(null);
-    setStatus('Log saved.');
+    await runAction('Saving log…', async () => {
+      if (logDraft.id) {
+        await readJson(`/api/admin/logs/${logDraft.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(logDraft)
+        });
+      } else {
+        const { id: _id, ...createPayload } = logDraft;
+        await readJson('/api/admin/logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(createPayload)
+        });
+      }
+      await loadAll();
+      setLogDraft(null);
+      setStatus('Log saved.');
+    });
+  }
+
+  async function deleteLogItem(id: number) {
+    if (!confirm('Delete this log permanently?')) return;
+    await runAction('Deleting log…', async () => {
+      await readJson(`/api/admin/logs/${id}`, { method: 'DELETE' });
+      if (logDraft?.id === id) setLogDraft(null);
+      await loadAll();
+      setStatus('Log deleted.');
+    });
   }
 
   async function insertImageInto(
@@ -369,19 +470,36 @@ export function AdminDashboard() {
                 New case study
               </button>
             </div>
-            <div className="admin-list">
-              {research.map((item) => (
-                <div key={item.id} className="admin-list-item">
+            <SortableList
+              items={research}
+              onReorder={(next) => {
+                setResearch(next);
+                void persistReorder('research', next);
+              }}
+              renderItem={(item) => (
+                <>
                   <div>
                     <strong>{item.title}</strong>
-                    <div className="admin-hint">/work/{item.slug}</div>
+                    <div className="admin-hint">
+                      /work/{item.slug}
+                      {!item.published ? ' · draft' : ''}
+                    </div>
                   </div>
-                  <button type="button" onClick={() => setResearchDraft(item)}>
-                    Edit
-                  </button>
-                </div>
-              ))}
-            </div>
+                  <div className="admin-row-actions">
+                    <button type="button" onClick={() => setResearchDraft(item)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="danger"
+                      onClick={() => void deleteResearchItem(item.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            />
           </div>
 
           {researchDraft ? (
@@ -396,19 +514,18 @@ export function AdminDashboard() {
                     }
                   />
                 </div>
-                <div className="admin-field">
-                  <label>Sort order</label>
-                  <input
-                    type="number"
-                    value={researchDraft.sortOrder}
-                    onChange={(e) =>
-                      setResearchDraft({
-                        ...researchDraft,
-                        sortOrder: Number(e.target.value)
-                      })
-                    }
-                  />
-                </div>
+              </div>
+              <div className="admin-field">
+                <label>Meta line (optional, shown under title on page)</label>
+                <input
+                  value={researchDraft.metaLine}
+                  onChange={(e) =>
+                    setResearchDraft({
+                      ...researchDraft,
+                      metaLine: e.target.value
+                    })
+                  }
+                />
               </div>
               <div className="admin-field">
                 <label>Title</label>
@@ -502,6 +619,15 @@ export function AdminDashboard() {
                 <button type="button" className="primary" onClick={() => void saveResearch()}>
                   Save research
                 </button>
+                {researchDraft.id ? (
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => void deleteResearchItem(researchDraft.id)}
+                  >
+                    Delete
+                  </button>
+                ) : null}
                 <button type="button" onClick={() => setResearchDraft(null)}>
                   Cancel
                 </button>
@@ -518,111 +644,181 @@ export function AdminDashboard() {
               Add writing link
             </button>
           </div>
-          {writing.map((item) => (
-            <div key={item.id} className="admin-grid admin-grid-2 admin-card">
-              <div className="admin-field">
-                <label>Title</label>
-                <input
-                  value={item.title}
-                  onChange={(e) =>
-                    setWriting((rows) =>
-                      rows.map((row) =>
-                        row.id === item.id ? { ...row, title: e.target.value } : row
+          <SortableList
+            items={writing}
+            onReorder={(next) => {
+              setWriting(next);
+              void persistReorder('writing', next);
+            }}
+            renderItem={(item) => (
+              <div className="admin-grid admin-grid-2" style={{ width: '100%' }}>
+                <div className="admin-field">
+                  <label>Title</label>
+                  <input
+                    value={item.title}
+                    onChange={(e) =>
+                      setWriting((rows) =>
+                        rows.map((row) =>
+                          row.id === item.id ? { ...row, title: e.target.value } : row
+                        )
                       )
-                    )
-                  }
-                />
-              </div>
-              <div className="admin-field">
-                <label>URL</label>
-                <input
-                  value={item.href}
-                  onChange={(e) =>
-                    setWriting((rows) =>
-                      rows.map((row) =>
-                        row.id === item.id ? { ...row, href: e.target.value } : row
+                    }
+                  />
+                </div>
+                <div className="admin-field">
+                  <label>URL</label>
+                  <input
+                    value={item.href}
+                    onChange={(e) =>
+                      setWriting((rows) =>
+                        rows.map((row) =>
+                          row.id === item.id ? { ...row, href: e.target.value } : row
+                        )
                       )
-                    )
-                  }
-                />
-              </div>
-              <div className="admin-field">
-                <label>Date (display)</label>
-                <input
-                  value={item.dateDisplay}
-                  onChange={(e) =>
-                    setWriting((rows) =>
-                      rows.map((row) =>
-                        row.id === item.id
-                          ? { ...row, dateDisplay: e.target.value }
-                          : row
+                    }
+                  />
+                </div>
+                <div className="admin-field">
+                  <label>Date (display)</label>
+                  <input
+                    value={item.dateDisplay}
+                    onChange={(e) =>
+                      setWriting((rows) =>
+                        rows.map((row) =>
+                          row.id === item.id
+                            ? { ...row, dateDisplay: e.target.value }
+                            : row
+                        )
                       )
-                    )
-                  }
-                />
+                    }
+                  />
+                </div>
+                <div className="admin-field">
+                  <label>Date (ISO-ish)</label>
+                  <input
+                    value={item.dateTime}
+                    onChange={(e) =>
+                      setWriting((rows) =>
+                        rows.map((row) =>
+                          row.id === item.id
+                            ? { ...row, dateTime: e.target.value }
+                            : row
+                        )
+                      )
+                    }
+                  />
+                </div>
+                <label className="admin-hint">
+                  <input
+                    type="checkbox"
+                    checked={item.published}
+                    onChange={(e) =>
+                      setWriting((rows) =>
+                        rows.map((row) =>
+                          row.id === item.id
+                            ? { ...row, published: e.target.checked }
+                            : row
+                        )
+                      )
+                    }
+                  />{' '}
+                  Published
+                </label>
+                <div className="admin-row-actions">
+                  <button type="button" onClick={() => void saveWritingItem(item)}>
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => void deleteWritingItem(item.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="admin-actions">
-                <button type="button" onClick={() => void saveWritingItem(item)}>
-                  Save
-                </button>
-              </div>
-            </div>
-          ))}
+            )}
+          />
         </div>
       ) : null}
 
       {tab === 'links' ? (
         <div className="admin-grid">
-          {(['elsewhere', 'footer'] as const).map((section) => (
-            <div key={section} className="admin-card admin-grid">
-              <h2>{section === 'elsewhere' ? 'Elsewhere list' : 'Footer links'}</h2>
-              {links
-                .filter((l) => l.section === section)
-                .map((link) => (
-                  <div key={link.id} className="admin-grid admin-grid-2">
-                    <div className="admin-field">
-                      <label>Label</label>
-                      <input
-                        value={link.label}
-                        onChange={(e) =>
-                          setLinks((rows) =>
-                            rows.map((row) =>
-                              row.id === link.id
-                                ? { ...row, label: e.target.value }
-                                : row
+          {(['elsewhere', 'footer'] as const).map((section) => {
+            const sectionLinks = links.filter((l) => l.section === section);
+            return (
+              <div key={section} className="admin-card admin-grid">
+                <h2>{section === 'elsewhere' ? 'Elsewhere list' : 'Footer links'}</h2>
+                <div className="admin-actions">
+                  <button type="button" onClick={() => void addLink(section)}>
+                    Add link
+                  </button>
+                </div>
+                <SortableList
+                  items={sectionLinks}
+                  onReorder={async (next) => {
+                    setLinks((rows) => {
+                      const other = rows.filter((l) => l.section !== section);
+                      return [...other, ...next];
+                    });
+                    await persistReorder('links', next, section);
+                  }}
+                  renderItem={(link) => (
+                    <div className="admin-grid admin-grid-2" style={{ width: '100%' }}>
+                      <div className="admin-field">
+                        <label>Label</label>
+                        <input
+                          value={link.label}
+                          onChange={(e) =>
+                            setLinks((rows) =>
+                              rows.map((row) =>
+                                row.id === link.id
+                                  ? { ...row, label: e.target.value }
+                                  : row
+                              )
                             )
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="admin-field">
-                      <label>URL</label>
-                      <input
-                        value={link.href}
-                        onChange={(e) =>
-                          setLinks((rows) =>
-                            rows.map((row) =>
-                              row.id === link.id
-                                ? { ...row, href: e.target.value }
-                                : row
+                          }
+                        />
+                      </div>
+                      <div className="admin-field">
+                        <label>URL</label>
+                        <input
+                          value={link.href}
+                          onChange={(e) =>
+                            setLinks((rows) =>
+                              rows.map((row) =>
+                                row.id === link.id
+                                  ? { ...row, href: e.target.value }
+                                  : row
+                              )
                             )
-                          )
-                        }
-                      />
+                          }
+                        />
+                      </div>
+                      <div className="admin-row-actions">
+                        <button
+                          type="button"
+                          className="danger"
+                          onClick={() => void deleteLinkItem(link.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              <div className="admin-actions">
-                <button
-                  type="button"
-                  className="primary"
-                  onClick={() => void saveLinks(section)}
-                >
-                  Save {section}
-                </button>
+                  )}
+                />
+                <div className="admin-actions">
+                  <button
+                    type="button"
+                    className="primary"
+                    onClick={() => void saveLinks(section)}
+                  >
+                    Save {section}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : null}
 
@@ -633,24 +829,47 @@ export function AdminDashboard() {
               <button
                 type="button"
                 className="primary"
-                onClick={() => setLogDraft({ id: 0, ...emptyLog() })}
+                onClick={() =>
+                  setLogDraft({
+                    id: 0,
+                    ...emptyLog(),
+                    sortOrder: logs.length
+                  })
+                }
               >
                 New log
               </button>
             </div>
-            <div className="admin-list">
-              {logs.map((item) => (
-                <div key={item.id} className="admin-list-item">
+            <SortableList
+              items={logs}
+              onReorder={(next) => {
+                setLogs(next);
+                void persistReorder('logs', next);
+              }}
+              renderItem={(item) => (
+                <>
                   <div>
                     <strong>{item.title}</strong>
-                    <div className="admin-hint">/logs/{item.slug}</div>
+                    <div className="admin-hint">
+                      /logs/{item.slug}
+                      {!item.published ? ' · draft' : ''}
+                    </div>
                   </div>
-                  <button type="button" onClick={() => setLogDraft(item)}>
-                    Edit
-                  </button>
-                </div>
-              ))}
-            </div>
+                  <div className="admin-row-actions">
+                    <button type="button" onClick={() => setLogDraft(item)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="danger"
+                      onClick={() => void deleteLogItem(item.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            />
           </div>
 
           {logDraft ? (
@@ -750,9 +969,28 @@ export function AdminDashboard() {
                 >
                   Upload image into body
                 </button>
+                <label className="admin-hint">
+                  <input
+                    type="checkbox"
+                    checked={logDraft.published}
+                    onChange={(e) =>
+                      setLogDraft({ ...logDraft, published: e.target.checked })
+                    }
+                  />{' '}
+                  Published
+                </label>
                 <button type="button" className="primary" onClick={() => void saveLog()}>
                   Save log
                 </button>
+                {logDraft.id ? (
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => void deleteLogItem(logDraft.id)}
+                  >
+                    Delete
+                  </button>
+                ) : null}
                 <button type="button" onClick={() => setLogDraft(null)}>
                   Cancel
                 </button>

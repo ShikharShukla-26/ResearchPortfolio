@@ -69,7 +69,13 @@ export async function runMigrations() {
       date_display TEXT NOT NULL DEFAULT '',
       date_time TEXT NOT NULL DEFAULT '',
       published BOOLEAN NOT NULL DEFAULT TRUE,
+      sort_order INT NOT NULL DEFAULT 0,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+  `;
+
+  await sql`
+    ALTER TABLE cms_logs
+    ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0
   `;
 }
