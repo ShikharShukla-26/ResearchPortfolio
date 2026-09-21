@@ -1,35 +1,45 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fleerob%2Fnext-mdx-blog)
+# Shikhar Shukla — Research Portfolio
 
-# next-mdx-blog
+Next.js portfolio with a **Postgres-backed admin dashboard** so you can update content after deploy without editing code.
 
-This is a blog template built with:
-
-- **Framework**: [Next.js](https://nextjs.org)
-- **Deployment**: [Vercel](https://vercel.com)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com)
-- **Analytics**: [Vercel Analytics](https://vercel.com/analytics)
-- **Database** (Optional): [Postgres](https://vercel.com/postgres)
-
-## Running Locally
-
-This application requires Node.js v18.17+.
+## Running locally
 
 ```bash
-git clone https://github.com/leerob/next-mdx-blog.git
-cd next-mdx-blog
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
-## Database (Optional)
+Open [http://localhost:3000](http://localhost:3000).
 
-Create a `.env.local` file with your `POSTGRES_URL` environment variable to store redirects.
+Without `POSTGRES_URL`, the site uses bundled fallback content (`app/site-data.ts` and `content/seed/*.mdx` for case studies).
 
-```sql
-CREATE TABLE redirects (
-  id SERIAL PRIMARY KEY,
-  source VARCHAR(255) NOT NULL,
-  destination VARCHAR(255) NOT NULL,
-  permanent BOOLEAN NOT NULL
-);
-```
+## Admin dashboard (after deploy)
+
+1. Add a Postgres database (e.g. [Vercel Postgres](https://vercel.com/storage/postgres) or Neon) and set **`POSTGRES_URL`** on your project.
+2. Set **`ADMIN_PASSWORD`** and **`SESSION_SECRET`** (long random strings).
+3. For image uploads on Vercel, enable [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) and set **`BLOB_READ_WRITE_TOKEN`**.  
+   Locally, uploads are saved under `public/uploads/`.
+4. Visit **`/admin/login`**, sign in with `ADMIN_PASSWORD`.  
+   First login creates tables and imports your existing portfolio (bios, research MDX, writing links, elsewhere/footer links).
+
+### What you can edit in `/admin`
+
+| Tab | Updates |
+|-----|---------|
+| **Site & bios** | Name, tagline, email, social URLs, resume link, default/long bio (Markdown) |
+| **Research** | Case studies on `/work/[slug]` (MDX body with `Meta`, `Callout`, `Table`) |
+| **Writing** | External essay links on the homepage |
+| **Links & social** | Elsewhere list + footer links |
+| **Logs** | Short posts at `/logs/[slug]` with cover image + Markdown body and inline images |
+
+Changes revalidate the public site on save.
+
+## Environment variables
+
+See [`.env.example`](.env.example).
+
+## Stack
+
+- Next.js 16, MDX (`next-mdx-remote` for CMS case studies)
+- Postgres (`postgres` package)
+- Optional Vercel Blob for media

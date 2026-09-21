@@ -32,6 +32,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local CMS uploads (use Vercel Blob in production)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

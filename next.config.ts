@@ -1,10 +1,5 @@
 import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
-import postgres from 'postgres';
-
-export const sql = postgres(process.env.POSTGRES_URL!, {
-  ssl: 'allow'
-});
 
 const nextConfig: NextConfig = {
   pageExtensions: ['mdx', 'ts', 'tsx'],
@@ -13,7 +8,9 @@ const nextConfig: NextConfig = {
       return [];
     }
 
-    let redirects = await sql`
+    const { getSql } = await import('./lib/cms/db');
+    const sql = getSql();
+    const redirects = await sql`
       SELECT source, destination, permanent
       FROM redirects;
     `;
@@ -24,13 +21,10 @@ const nextConfig: NextConfig = {
       permanent: !!permanent
     }));
   },
-  // Note: Using the Rust compiler means we cannot use
-  // rehype or remark plugins. If you need them, remove
-  // the `experimental.mdxRs` flag.
   experimental: {
     mdxRs: { mdxType: 'gfm' }
   }
- };
+};
 
 const withMDX = createMDX({});
 

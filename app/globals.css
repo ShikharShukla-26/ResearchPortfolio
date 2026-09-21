@@ -158,3 +158,19 @@ table {
   padding: 0.55rem 0.7rem;
 }
 
+.cms-log-cover {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line-subtle);
+  margin: 0 0 1.6rem;
+}
+
+.cms-log-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
