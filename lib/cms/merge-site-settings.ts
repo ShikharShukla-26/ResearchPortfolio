@@ -1,12 +1,15 @@
 import { defaultSiteSettings } from './defaults';
 import type { SiteSettings } from './types';
 
+/** CMS JSON must not override defaults with empty contact strings. */
 export function mergeSiteSettings(
-  stored: Partial<SiteSettings> | null | undefined
+  stored: Partial<SiteSettings> | undefined
 ): SiteSettings {
   const merged = { ...defaultSiteSettings, ...stored };
-  if (!merged.phone?.trim()) merged.phone = defaultSiteSettings.phone;
-  if (!merged.address?.trim()) merged.address = defaultSiteSettings.address;
-  if (!merged.email?.trim()) merged.email = defaultSiteSettings.email;
+  for (const key of ['email', 'phone', 'address'] as const) {
+    if (!merged[key]?.trim()) {
+      merged[key] = defaultSiteSettings[key];
+    }
+  }
   return merged;
 }

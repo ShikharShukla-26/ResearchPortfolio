@@ -99,9 +99,10 @@ export async function runMigrations() {
         updated_at = NOW()
     WHERE id = 1
       AND (
-        (data->>'phone' IS NULL OR data->>'phone' = '')
-        OR (data->>'address' IS NULL OR data->>'address' = '')
+        (data->>'phone' IS NULL OR trim(data->>'phone') = '')
+        OR (data->>'address' IS NULL OR trim(data->>'address') = '')
         OR data->>'address' LIKE '122/C%'
+        OR data->>'address' NOT LIKE '%Mangalpur%'
       )
   `;
 

@@ -1,4 +1,5 @@
 import '../site.css';
+import { ContactFooter } from '../components/contact-footer';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
 export const dynamic = 'force-dynamic';
@@ -6,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export default async function SiteLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
-  const { footer } = await getPortfolioData();
+  const { site, footer } = await getPortfolioData();
 
   return (
     <main className="site-shell">
@@ -23,6 +24,7 @@ export default async function SiteLayout({
             {link.label}
           </a>
         ))}
+        <ContactFooter site={site} />
       </footer>
     </main>
   );

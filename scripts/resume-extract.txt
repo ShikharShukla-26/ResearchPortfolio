@@ -1,0 +1,83 @@
+ SHIKHAR SHUKLA 
+Behavioral & UX Research | Qualitative, Ethnographic & Heuristic Methods 
+Vadodara, Gujarat, India  ·  shikharshukla678@gmail.com  ·  +91 9825496937  ·  Substack  ·  LinkedIn   
+Independent researcher with a software engineering background — six months of embedded workplace ethnography, plus five 
+self-initiated studies spanning behavioral research and UX/heuristic audits of live products (Zipcar, Wise, Decathlon). Skilled at 
+identifying gaps between stated intent and observed behavior, running structured evaluations against established frameworks, 
+and translating findings into prioritized, testable interventions for product and research teams. 
+Methods: ethnographic observation · semi-structured interviewing · heuristic evaluation (Nielsen’s 10 heuristics) · cognitive/FTUE 
+walkthroughs · cross-group triangulation · hypothesis-driven behavioral modeling · stakeholder-ready reporting & executive briefs 
+SELECTED RESEARCH  
+Surface Compliance, Silent Resistance 
+Real-World Workplace Ethnography  ·  Independent Behavioral Research  ·  Jan–Aug 2026  ·  Two-Part Study 
+Research question: When management introduces control-based policies in response to a perceived productivity problem, what 
+behavioral patterns emerge in the affected team, and how does that pattern evolve as management escalates from control 
+toward personnel removal? 
+• 6-month embedded ethnographic observation of a 7-person software team, conducted as an active insider with real-time 
+access to policy rollout and management interactions; cross-validated against a natural internal control group and a cross-
+team bridge role. 
+• Developed the Control–Trust–Output Loop, a behavioral model showing how management's structural control policies were 
+read as distrust signals — decreasing discretionary effort and output, and prompting further controls that reproduced the 
+original problem. 
+• Synthesized field evidence into 3 testable hypotheses and 3 proposed interventions (a requirements-alignment discovery 
+sprint, embedding a developer in client deadline discussions, and replacing presence tracking with outcome metrics). 
+• Part 2 — The Exit Arc (Jul–Aug 2026): tracked the loop into a terminal phase as management’s controls escalated from 
+policy into personnel-level consequences, including the observer’s own exit — captured as reflexive data rather than left out 
+of the analysis. 
+• Identified a structural mirror: management's own flight from direct client accountability matched the same avoidance 
+behavior it had been punishing in employees. 
+• Extended the Control–Trust–Output Loop into an 11-stage terminal model and proposed 3 crisis-stage interventions to 
+replace scapegoating with root-cause discovery. 
+Full case studies — Part 1 (18-page): Read on Google Docs   ·   Part 2 – The Exit Arc: Read on Google Docs 
+The Six-Week Silence 
+Simulated Qualitative Research Exercise (dummy data)  ·  2026 
+• Conducted a structured, interview-based investigation into a 5-person team, reconstructing the chain of individually 
+reasonable assumptions that led four members to reorganize their behavior around an unverified interpretation over six 
+weeks. 
+• Used a group debrief to reframe the issue from individual blame to a systemic feedback-loop failure, and proposed a one-
+week “assumption tripwire” intervention triggering a direct check-in instead of a default explanation. 
+Case study: Read on Google Docs   ·   Writing archive: shikharshukla26.substack.com 
+UX / PRODUCT RESEARCH — INDEPENDENT, UNAFFILIATED AUDITS  
+Zipcar — First-Time Experience (FTUE) Audit   ·   N=1 exploratory walkthrough & heuristic evaluation, self-initiated · 2026 
+• Conducted a self-initiated FTUE audit of zipcar.com’s homepage and booking flow; surfaced 2 high-priority findings, 
+headlined by service-category ambiguity that persists for several seconds after the page loads. 
+• The second finding — no visible confirmation after editing search fields — left it unclear whether an edit had registered; 
+reframed both as untested hypotheses and designed two 5-user validation tests (task, research question, success criteria) to 
+run before any engineering work begins. 
+Brief   ·   Full version 
+Decathlon.in — Heuristic Evaluation of the Purchase Journey   ·   8 findings, Nielsen’s 10 heuristics · Sep 2026 
+• Conducted a solo heuristic evaluation of Decathlon.in’s purchase journey (search → payment) against Nielsen’s 10 heuristics; 
+surfaced 8 findings, headlined by cycles being non-returnable with no disclosure before purchase — flagged as a legal/trust 
+risk. 
+• Mapped every finding to its implementation effort (copy change vs. engineering) and prioritized 3 as high-impact and fixable 
+without a redesign. 
+Brief   ·   Full version 
+Wise India — Onboarding & Signup Heuristic Evaluation   ·   16-screenshot walkthrough, 6 decision points · Sep 2026 
+• Conducted a cognitive walkthrough of Wise.com’s transfer and signup flow for a first-time, India-based visitor against 
+Nielsen’s 10 heuristics; surfaced 3 priority findings, headlined by a silent signup failure when selecting “Personal” + “India”. 
+• Left eligibility unresolved at the highest-intent moment in the funnel; proposed 3 fixes and a moderated 5–8 user validation 
+study as the next step. 
+Brief   ·   Full version 
+BEHAVIORAL & PRODUCT PSYCHOLOGY WRITING  
+First-person research and writing on how digital products shape attention and decision-making — persuasive design, dark 
+patterns, and metacognitive hijacking. 
+• "YouTube Is Not Your Problem. Tomorrow Is." — first-person analysis of digital escape and thought suppression. 
+• "How YouTube Controls Your Thinking Before You Notice" — breakdown of 7 UX mechanisms engineered to prevent users 
+from stopping. 
+PROFESSIONAL EXPERIENCE  
+DevLoops Technologies Pvt Ltd  —  Software Development Engineer I Jan 2026 – Aug 2026 
+• Sole full-stack developer on production platforms for international clients (UK, Canada, Netherlands, USA) and Indian 
+healthcare — owned architecture, backend, frontend, and cloud infrastructure end-to-end. 
+• Designed multi-role access systems (5–6 roles) governing how information and permissions flow through an organization — 
+including a 900+ field Canadian real-estate appraisal workflow and a UK VAT reconciliation platform. 
+• Built and shipped a live healthcare platform (multi-role access, payments, appointment booking, notifications) used by active 
+clinics — direct exposure to how real users behave inside a structured, role-based workflow. 
+DevLoops Technologies Pvt Ltd  —  Intern Engineer → Software Development Training Mar 2025 – Dec 2025 
+• Built the company's corporate website with a custom no-code admin panel; delivered a trilingual (EN/NL/Flemish) CMS, data 
+migration (1,000+ contacts), and analytics dashboard for a Netherlands-based client, plus a logistics website for a US-based 
+trucking company. 
+EDUCATION  
+B.Tech, Mechatronics  —  ITM Vocational University  ·  CGPA 7.85 2020 – 2023 
+Diploma, Mechatronics  —  ITM Vocational University  ·  CGPA 7.00 2017 – 2020 
+CERTIFICATIONS  
+Namaste React (2025)  ·  Complete JavaScript Course (Udemy, 2024)  ·  Namaste JavaScript (2024)  —  NamasteDev.com 

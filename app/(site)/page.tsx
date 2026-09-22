@@ -1,5 +1,4 @@
 import { BioSection } from '../components/bio-section';
-import { SiteContact } from '../components/site-contact';
 import { HomeVisual } from '../components/home-visual';
 import { ResearchList } from '../components/research-list';
 import { getPortfolioData } from '@/lib/cms/get-data';
@@ -23,7 +22,6 @@ export default async function HomePage() {
           </a>
         </h1>
         <p className="content-subtitle site-tagline">{site.tagline}</p>
-        <SiteContact site={site} />
 
         <BioSection
           defaultBioMd={site.bioDefaultMd}

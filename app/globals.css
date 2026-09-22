@@ -78,43 +78,8 @@ table {
 
 /* Portfolio additions (on top of site.css) */
 .site-tagline {
-  margin: -1.6rem 0 1rem;
+  margin: -1.6rem 0 2.4rem;
   font-size: 0.95em;
-}
-
-.site-contact {
-  margin: 0 0 2.4rem;
-  font-family: var(--font-ui);
-  font-size: 0.88em;
-  line-height: 1.55;
-  color: var(--text-secondary);
-}
-
-.site-contact-heading {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-reading);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-heading);
-}
-
-.site-contact-line a {
-  color: var(--text-secondary);
-  text-decoration: none;
-}
-
-.site-contact-line a:hover {
-  color: var(--text-copy);
-  text-decoration: underline;
-}
-
-.site-contact-sep {
-  color: var(--text-nav);
-}
-
-.site-contact-address {
-  margin: 0.35rem 0 0;
-  max-width: 36em;
 }
 
 .site-footer {
