@@ -330,6 +330,24 @@ export function AdminDashboard() {
     input.click();
   }
 
+  async function cleanupTestData() {
+    if (
+      !confirm(
+        'Remove E2E test rows (e2e-* slugs, "New link", "New essay" placeholders)?'
+      )
+    ) {
+      return;
+    }
+    await runAction('Removing test data…', async () => {
+      await readJson<{ removed: Record<string, number> }>(
+        '/api/admin/cleanup-test-data',
+        { method: 'POST' }
+      );
+      await loadAll();
+      setStatus('Test data removed. Refresh the homepage.');
+    });
+  }
+
   async function logout() {
     await fetch('/api/admin/logout', { method: 'POST' });
     router.replace('/admin/login');
@@ -347,6 +365,9 @@ export function AdminDashboard() {
           <a href="/" className="text-nav">
             View site
           </a>
+          <button type="button" onClick={() => void cleanupTestData()}>
+            Remove test junk
+          </button>
           <button type="button" onClick={() => void logout()}>
             Sign out
           </button>

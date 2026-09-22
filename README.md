@@ -43,6 +43,8 @@ npm run test:e2e
 
 See `e2e/TEST-CASES.md` for the full matrix (5 cases × admin feature). HTML report: `e2e-report/index.html`.
 
+If E2E tests ever hit production by mistake, sign in at `/admin` and click **Remove test junk**, or run `node scripts/prod-cleanup-via-api.mjs` after deploy.
+
 ## Environment variables
 
 See [`.env.example`](.env.example).

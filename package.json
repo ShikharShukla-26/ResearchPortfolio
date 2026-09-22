@@ -4,6 +4,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
+    "cms:cleanup-test-data": "node scripts/cleanup-test-data.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "delete": "rm -rf app/n"

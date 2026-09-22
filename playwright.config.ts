@@ -26,8 +26,12 @@ loadEnvFile('.env.local');
 loadEnvFile('.env.vercel.pull');
 loadEnvFile('.env.e2e');
 
+const productionUrl = 'https://next-mdx-blog-xi.vercel.app';
 const baseURL =
-  process.env.PLAYWRIGHT_BASE_URL ?? 'https://next-mdx-blog-xi.vercel.app';
+  process.env.PLAYWRIGHT_BASE_URL ??
+  (process.env.ALLOW_PROD_E2E === '1'
+    ? productionUrl
+    : 'http://127.0.0.1:3000');
 
 export default defineConfig({
   testDir: './e2e',

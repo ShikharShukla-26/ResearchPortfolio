@@ -56,25 +56,39 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     site,
     research:
       researchResult.status === 'fulfilled'
-        ? researchRows.map((r) => ({
-            href: `/work/${r.slug}`,
-            title: r.title,
-            date: r.dateDisplay,
-            dateTime: r.dateTime
-          }))
+        ? researchRows
+            .filter((r) => r.title.trim().length > 0 && r.slug.trim().length > 0)
+            .map((r) => ({
+              href: `/work/${r.slug}`,
+              title: r.title,
+              date: r.dateDisplay,
+              dateTime: r.dateTime
+            }))
         : fallback.research,
     writing:
       writingResult.status === 'fulfilled'
-        ? writingRows.map((w) => ({
-            href: w.href,
-            title: w.title,
-            date: w.dateDisplay,
-            dateTime: w.dateTime
-          }))
+        ? writingRows
+            .filter(
+              (w) =>
+                w.title.trim().length > 0 &&
+                w.title !== 'New essay' &&
+                !w.title.startsWith('E2E Writing')
+            )
+            .map((w) => ({
+              href: w.href,
+              title: w.title,
+              date: w.dateDisplay,
+              dateTime: w.dateTime
+            }))
         : fallback.writing,
     elsewhere:
       linksResult.status === 'fulfilled'
-        ? elsewhereLinks
+        ? elsewhereLinks.filter(
+            (l) =>
+              l.label.trim().length > 0 &&
+              l.label !== 'New link' &&
+              !l.label.startsWith('E2E Link')
+          )
         : fallback.elsewhere,
     footer:
       footerLinks.length > 0

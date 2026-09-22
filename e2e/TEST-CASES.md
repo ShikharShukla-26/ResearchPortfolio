@@ -13,7 +13,12 @@ Set **`E2E_ADMIN_PASSWORD`** in `.env.e2e` (copy from `.env.e2e.example`) to mat
 | **Links & social** | Sections; add link; save elsewhere; homepage; delete |
 | **Logs** | UI; create; detail page; index; delete |
 
-Default target: `https://next-mdx-blog-xi.vercel.app` (`PLAYWRIGHT_BASE_URL` to override).
+Default target: **`http://127.0.0.1:3000`** (run `npm run dev` first).
+
+Do **not** run against production unless intentional:  
+`PLAYWRIGHT_BASE_URL=https://next-mdx-blog-xi.vercel.app ALLOW_PROD_E2E=1 npm run test:e2e`
+
+After accidental prod runs: `npm run cms:cleanup-test-data` or admin → **Remove test junk**.
 
 ## Last run (production)
 
