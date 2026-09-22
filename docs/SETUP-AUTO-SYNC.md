@@ -1,6 +1,9 @@
-# Automatic sync of both Vercel URLs (Option B)
+# Automatic sync of both Vercel URLs
 
-GitHub Actions [`.github/workflows/sync-vercel-aliases.yml`](../.github/workflows/sync-vercel-aliases.yml) runs when **Vercel reports a successful production deploy** (and on push to `main` / manual run) so **both** hostnames stay on the same production deployment:
+**Primary (no GitHub secret):** each **production** Vercel build runs `scripts/sync-vercel-production-aliases.mjs` after `npm run build` (see `vercel.json`). The project must have **`VERCEL_TOKEN`** in **Production** environment variables (same token as your Vercel account; used only to assign aliases).
+
+**Optional backup:** GitHub Actions [`.github/workflows/sync-vercel-aliases.yml`](../.github/workflows/sync-vercel-aliases.yml) runs on push to `main` / manual run if **`VERCEL_TOKEN`** is set as a repo secret:
+
 
 - `shikhar-research.vercel.app`
 - `next-mdx-blog-xi.vercel.app`

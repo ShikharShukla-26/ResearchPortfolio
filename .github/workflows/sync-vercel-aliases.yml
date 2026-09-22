@@ -26,19 +26,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check VERCEL_TOKEN
-        run: |
-          if [ -z "$VERCEL_TOKEN" ]; then
-            echo "::error title=Missing VERCEL_TOKEN::Add repository secret VERCEL_TOKEN. See docs/vercel-auto-sync.md"
-            exit 1
-          fi
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
       - name: Sync production aliases
-        run: npm run deploy:sync-aliases
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN not set — skipping (aliases sync on Vercel build). See docs/SETUP-AUTO-SYNC.md"
+            exit 0
+          fi
+          npm run deploy:sync-aliases
