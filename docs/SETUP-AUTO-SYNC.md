@@ -1,6 +1,6 @@
 # Automatic sync of both Vercel URLs (Option B)
 
-After each push to `main`, GitHub Actions runs [`.github/workflows/sync-vercel-aliases.yml`](../.github/workflows/sync-vercel-aliases.yml) so **both** hostnames stay on the same production deployment:
+GitHub Actions [`.github/workflows/sync-vercel-aliases.yml`](../.github/workflows/sync-vercel-aliases.yml) runs when **Vercel reports a successful production deploy** (and on push to `main` / manual run) so **both** hostnames stay on the same production deployment:
 
 - `shikhar-research.vercel.app`
 - `next-mdx-blog-xi.vercel.app`

@@ -1,21 +1,37 @@
-# Keeps shikhar-research.vercel.app and next-mdx-blog-xi.vercel.app on the same production deployment.
-# One-time: add repo secret VERCEL_TOKEN — see docs/SETUP-AUTO-SYNC.md
+# After Vercel production deploy succeeds, point both *.vercel.app URLs at that deployment.
+# Requires repo secret VERCEL_TOKEN — see docs/vercel-auto-sync.md
 name: Sync Vercel production aliases
 
 on:
+  deployment_status:
+  workflow_dispatch:
   push:
     branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: sync-vercel-aliases
-  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # Skip failed/canceled deploy notifications; allow manual + push (push waits in script).
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'deployment_status' &&
+        github.event.deployment_status.state == 'success')
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: team_folaDmDuVQIuuekP8hHelcw2
+      VERCEL_PROJECT_ID: prj_44BNm66qJ0MBJWQsBZYo6jeltlDz
+      VERCEL_PROJECT: shikhar-research
+      GITHUB_SHA: ${{ github.event.deployment.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check VERCEL_TOKEN
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error title=Missing VERCEL_TOKEN::Add repository secret VERCEL_TOKEN. See docs/vercel-auto-sync.md"
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:
@@ -25,9 +41,4 @@ jobs:
         run: npm install -g vercel@latest
 
       - name: Sync production aliases
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          GITHUB_SHA: ${{ github.event_name == 'push' && github.sha || '' }}
-          VERCEL_ORG_ID: team_folaDmDuVQIuuekP8hHelcw2
-          VERCEL_PROJECT_ID: prj_44BNm66qJ0MBJWQsBZYo6jeltlDz
         run: npm run deploy:sync-aliases

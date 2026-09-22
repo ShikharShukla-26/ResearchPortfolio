@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 /**
  * Point all production vanity URLs at the latest Ready production deployment.
- * Run after every git push to main (Vercel only auto-updates one primary alias).
  *
  * Usage: npm run deploy:sync-aliases
- * Env: VERCEL_PROJECT (default shikhar-research)
- *      VERCEL_PRODUCTION_ALIASES (comma-separated hostnames)
- *      GITHUB_SHA — when set (CI), wait for that commit's production deploy
+ * CI: set GITHUB_SHA to wait for that commit's production deploy (up to ~12 min).
  */
 import { execFileSync, execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -30,24 +27,32 @@ const ALIASES = (
   .map((s) => s.trim())
   .filter(Boolean);
 
-const EXPECTED_SHA = process.env.GITHUB_SHA?.trim() ?? '';
-const POLL_MS = Number(process.env.VERCEL_SYNC_POLL_MS ?? 30_000);
-const MAX_WAIT_MS = Number(process.env.VERCEL_SYNC_MAX_WAIT_MS ?? 600_000);
+const EXPECTED_SHA = process.env.GITHUB_SHA?.trim() || '';
+const POLL_MS = 15_000;
+const MAX_POLLS = 48;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function runVercel(args) {
   const bin = vercelCommand();
+  const env = { ...process.env };
+  if (!env.VERCEL_TOKEN) {
+    throw new Error('VERCEL_TOKEN is not set.');
+  }
   try {
     return execFileSync(bin, [...args, '--non-interactive'], {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
       shell: process.platform === 'win32',
-      env: process.env
+      env
     });
   } catch {
     return execSync(`npx vercel ${args.join(' ')} --non-interactive`, {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: process.env
+      env
     });
   }
 }
@@ -55,76 +60,50 @@ function runVercel(args) {
 function listProductionDeployments() {
   const raw = runVercel(['ls', PROJECT, '--json']);
   const data = JSON.parse(raw);
-  return (data.deployments ?? []).filter(
-    (d) => d.target === 'production' && d.state === 'READY'
+  return data.deployments ?? [];
+}
+
+function pickDeployment(deployments) {
+  const production = deployments.filter(
+    (d) => d.state === 'READY' && d.target === 'production'
   );
-}
-
-function hostFromDeployment(d) {
-  return d.url.replace(/^https?:\/\//, '');
-}
-
-function deploymentMatchesSha(d, sha) {
-  const deployed = d.meta?.githubCommitSha ?? '';
-  if (!deployed || !sha) return false;
-  return deployed === sha || deployed.startsWith(sha.slice(0, 7));
-}
-
-function pickDeploymentHost(deployments) {
-  if (EXPECTED_SHA) {
-    const match = deployments.find((d) => deploymentMatchesSha(d, EXPECTED_SHA));
-    if (match) return hostFromDeployment(match);
+  if (!EXPECTED_SHA) {
+    return production[0];
   }
-  const latest = deployments[0];
-  if (!latest?.url) {
-    throw new Error(`No Ready production deployment for project "${PROJECT}".`);
-  }
-  return hostFromDeployment(latest);
-}
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  const forSha = production.find(
+    (d) => d.meta?.githubCommitSha === EXPECTED_SHA
+  );
+  return forSha ?? production[0];
 }
 
 async function resolveDeploymentHost() {
-  const start = Date.now();
-  while (true) {
+  for (let attempt = 0; attempt <= MAX_POLLS; attempt++) {
     const deployments = listProductionDeployments();
-    try {
-      const host = pickDeploymentHost(deployments);
-      if (EXPECTED_SHA) {
-        const match = deployments.find((d) => deploymentMatchesSha(d, EXPECTED_SHA));
-        if (match) {
-          console.log(`Matched commit ${EXPECTED_SHA.slice(0, 7)} → ${host}`);
-          return host;
-        }
-        console.log(
-          `Waiting for Vercel production deploy of ${EXPECTED_SHA.slice(0, 7)}…`
+    const chosen = pickDeployment(deployments);
+    if (chosen?.url) {
+      if (
+        EXPECTED_SHA &&
+        chosen.meta?.githubCommitSha === EXPECTED_SHA
+      ) {
+        console.log(`Matched deploy for commit ${EXPECTED_SHA.slice(0, 7)}`);
+      } else if (EXPECTED_SHA && attempt === MAX_POLLS) {
+        console.warn(
+          `Timed out waiting for commit ${EXPECTED_SHA.slice(0, 7)}; using latest production.`
         );
-      } else {
-        console.log(`Latest production: ${host}`);
-        return host;
       }
-    } catch {
-      console.log('Waiting for a Ready production deployment…');
+      return chosen.url.replace(/^https?:\/\//, '');
     }
-    if (Date.now() - start > MAX_WAIT_MS) {
-      throw new Error(
-        `Timed out after ${MAX_WAIT_MS / 1000}s waiting for Vercel production.`
-      );
+    if (!EXPECTED_SHA || attempt === MAX_POLLS) {
+      break;
     }
+    console.log(`Waiting for production deploy (${attempt + 1}/${MAX_POLLS})…`);
     await sleep(POLL_MS);
   }
-}
-
-if (process.env.GITHUB_ACTIONS === 'true' && !process.env.VERCEL_TOKEN) {
-  console.error(
-    'VERCEL_TOKEN is not set. Add it to GitHub Actions secrets (see docs/SETUP-AUTO-SYNC.md).'
-  );
-  process.exit(1);
+  throw new Error(`No Ready production deployment for project "${PROJECT}".`);
 }
 
 const deploymentHost = await resolveDeploymentHost();
+console.log(`Latest production: ${deploymentHost}`);
 
 for (const alias of ALIASES) {
   console.log(`→ ${alias}`);
