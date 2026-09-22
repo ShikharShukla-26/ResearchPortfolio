@@ -103,6 +103,7 @@ export async function runMigrations() {
         OR (data->>'address' IS NULL OR trim(data->>'address') = '')
         OR data->>'address' LIKE '122/C%'
         OR data->>'address' NOT LIKE '%Mangalpur%'
+        OR data->>'address' LIKE '%Gujarat 390011, India%'
       )
   `;
 
