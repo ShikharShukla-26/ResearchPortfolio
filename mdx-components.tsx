@@ -55,28 +55,14 @@ const components = {
     const codeHTML = highlight(children as string);
     return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
   },
-  Table: ({ data }: { data: { headers: string[]; rows: string[][] } }) => (
-    <table>
-      {data.headers.some((header) => header.trim() !== '') ? (
-        <thead>
-          <tr>
-            {data.headers.map((header, index) => (
-              <th key={index}>{header}</th>
-            ))}
-          </tr>
-        </thead>
-      ) : null}
-      <tbody>
-        {data.rows.map((row, index) => (
-          <tr key={index}>
-            {row.map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+  table: (props: ComponentPropsWithoutRef<'table'>) => (
+    <table className="content-table" {...props} />
   ),
+  thead: (props: ComponentPropsWithoutRef<'thead'>) => <thead {...props} />,
+  tbody: (props: ComponentPropsWithoutRef<'tbody'>) => <tbody {...props} />,
+  tr: (props: ComponentPropsWithoutRef<'tr'>) => <tr {...props} />,
+  th: (props: ComponentPropsWithoutRef<'th'>) => <th {...props} />,
+  td: (props: ComponentPropsWithoutRef<'td'>) => <td {...props} />,
   Meta: ({ children }: { children: React.ReactNode }) => (
     <p className="article-meta">{children}</p>
   ),
