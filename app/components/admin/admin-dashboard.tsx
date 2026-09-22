@@ -41,6 +41,8 @@ const emptyResearch = (): Omit<ResearchItem, 'id'> => ({
   dateTime: '',
   metaLine: '',
   bodyMdx: '# New case study\n\n<Meta>Method · Date</Meta>\n',
+  briefUrl: '',
+  fullUrl: '',
   published: true,
   sortOrder: 0
 });
@@ -614,6 +616,38 @@ export function AdminDashboard() {
                   />
                 </div>
               </div>
+              <div className="admin-grid admin-grid-2">
+                <div className="admin-field">
+                  <label>Brief version URL</label>
+                  <input
+                    value={researchDraft.briefUrl}
+                    placeholder="https://drive.google.com/… or /file.pdf"
+                    onChange={(e) =>
+                      setResearchDraft({
+                        ...researchDraft,
+                        briefUrl: e.target.value
+                      })
+                    }
+                  />
+                </div>
+                <div className="admin-field">
+                  <label>Full version URL</label>
+                  <input
+                    value={researchDraft.fullUrl}
+                    placeholder="https://drive.google.com/… or /file.pdf"
+                    onChange={(e) =>
+                      setResearchDraft({
+                        ...researchDraft,
+                        fullUrl: e.target.value
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <p className="admin-hint">
+                Two different Brief and Full URLs show a chooser on the homepage; leave
+                Brief empty for a single direct link. /work/[slug] redirects to Full.
+              </p>
               <div className="admin-field">
                 <label>Body (MDX — supports Meta, Callout, Table components)</label>
                 <textarea

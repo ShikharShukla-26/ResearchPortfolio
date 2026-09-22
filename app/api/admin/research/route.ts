@@ -29,6 +29,8 @@ export async function POST(request: Request) {
       dateTime: String(body.dateTime ?? ''),
       metaLine: String(body.metaLine ?? ''),
       bodyMdx: String(body.bodyMdx ?? ''),
+      briefUrl: String(body.briefUrl ?? ''),
+      fullUrl: String(body.fullUrl ?? ''),
       published: Boolean(body.published ?? true),
       sortOrder: Number(body.sortOrder ?? 0)
     });

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { MdxBody } from '@/app/components/cms/mdx-body';
 import { cmsEnabled } from '@/lib/cms/db';
 import { readResearchFallback } from '@/lib/cms/fallback';
 import { getResearchBySlug } from '@/lib/cms/queries';
+import { researchExternalRedirectUrl } from '@/lib/cms/research-document-urls';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,10 +26,19 @@ export default async function ResearchPage({ params }: PageProps) {
   const { slug } = await params;
   let bodyMdx: string | null = null;
 
+  let briefUrl = '';
+  let fullUrl = '';
   if (cmsEnabled()) {
     const post = await getResearchBySlug(slug);
-    if (post) bodyMdx = post.bodyMdx;
+    if (post) {
+      briefUrl = post.briefUrl;
+      fullUrl = post.fullUrl;
+      bodyMdx = post.bodyMdx;
+    }
   }
+
+  const externalUrl = researchExternalRedirectUrl(slug, briefUrl, fullUrl);
+  if (externalUrl) redirect(externalUrl);
 
   if (!bodyMdx) {
     const fallback = await readResearchFallback(slug);

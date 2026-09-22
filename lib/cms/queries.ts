@@ -7,17 +7,28 @@ import type {
   WritingItem
 } from './types';
 import { defaultSiteSettings } from './defaults';
+import { resolveResearchDocumentUrls } from './research-document-urls';
 
 function mapResearch(row: Record<string, unknown>): ResearchItem {
+  const slug = row.slug as string;
+  const rawBrief = (row.brief_url as string) ?? '';
+  const rawFull = (row.full_url as string) ?? '';
+  const { briefUrl, fullUrl } = resolveResearchDocumentUrls(
+    slug,
+    rawBrief,
+    rawFull
+  );
   return {
     id: row.id as number,
-    slug: row.slug as string,
+    slug,
     title: row.title as string,
     description: row.description as string,
     dateDisplay: row.date_display as string,
     dateTime: row.date_time as string,
     metaLine: row.meta_line as string,
     bodyMdx: row.body_mdx as string,
+    briefUrl,
+    fullUrl,
     published: row.published as boolean,
     sortOrder: row.sort_order as number
   };
@@ -73,7 +84,7 @@ export async function createResearch(input: Omit<ResearchItem, 'id'>) {
   const sql = getSql();
   const [row] = await sql`
     INSERT INTO cms_research (
-      slug, title, description, date_display, date_time, meta_line, body_mdx, published, sort_order
+      slug, title, description, date_display, date_time, meta_line, body_mdx, brief_url, full_url, published, sort_order
     ) VALUES (
       ${input.slug},
       ${input.title},
@@ -82,6 +93,8 @@ export async function createResearch(input: Omit<ResearchItem, 'id'>) {
       ${input.dateTime},
       ${input.metaLine},
       ${input.bodyMdx},
+      ${input.briefUrl ?? ''},
+      ${input.fullUrl ?? ''},
       ${input.published},
       ${input.sortOrder}
     )
@@ -104,6 +117,8 @@ export async function updateResearch(id: number, input: Partial<ResearchItem>) {
       date_time = ${merged.dateTime},
       meta_line = ${merged.metaLine},
       body_mdx = ${merged.bodyMdx},
+      brief_url = ${merged.briefUrl},
+      full_url = ${merged.fullUrl},
       published = ${merged.published},
       sort_order = ${merged.sortOrder},
       updated_at = NOW()

@@ -19,6 +19,8 @@ export type ResearchItem = {
   dateTime: string;
   metaLine: string;
   bodyMdx: string;
+  briefUrl: string;
+  fullUrl: string;
   published: boolean;
   sortOrder: number;
 };
@@ -57,10 +59,13 @@ export type LogEntry = {
 export type PortfolioData = {
   site: SiteSettings;
   research: Array<{
+    slug: string;
     href: string;
     title: string;
     date: string;
     dateTime: string;
+    briefUrl: string;
+    fullUrl: string;
   }>;
   writing: Array<{
     href: string;

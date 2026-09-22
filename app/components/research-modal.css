@@ -1,0 +1,78 @@
+.blog-row-button {
+  width: 100%;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.research-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.research-modal {
+  width: min(100%, 22rem);
+  padding: 1.25rem 1.35rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle, #333);
+  background: var(--bg, #111);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+}
+
+.research-modal-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--text-heading, #f5f5f5);
+}
+
+.research-modal-hint {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #aaa);
+}
+
+.research-modal-actions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.research-modal-btn {
+  border: 1px solid var(--border-subtle, #444);
+  background: var(--surface-subtle, #1a1a1a);
+  color: var(--text-copy, #eee);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.research-modal-btn.primary {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.research-modal-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.research-modal-cancel {
+  margin-top: 0.75rem;
+  border: none;
+  background: none;
+  color: var(--text-nav, #888);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}

@@ -1,4 +1,5 @@
 import { getSql } from './db';
+import { RESEARCH_DOCUMENT_DEFAULTS } from './research-document-urls';
 
 export async function runMigrations() {
   const sql = getSql();
@@ -78,4 +79,28 @@ export async function runMigrations() {
     ALTER TABLE cms_logs
     ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0
   `;
+
+  await sql`
+    ALTER TABLE cms_research
+    ADD COLUMN IF NOT EXISTS brief_url TEXT NOT NULL DEFAULT ''
+  `;
+  await sql`
+    ALTER TABLE cms_research
+    ADD COLUMN IF NOT EXISTS full_url TEXT NOT NULL DEFAULT ''
+  `;
+
+  for (const [slug, urls] of Object.entries(RESEARCH_DOCUMENT_DEFAULTS)) {
+    await sql`
+      UPDATE cms_research
+      SET brief_url = ${urls.briefUrl}, full_url = ${urls.fullUrl}
+      WHERE slug = ${slug}
+        AND (
+          (brief_url = '' AND full_url = '')
+          OR brief_url LIKE '/work/%'
+          OR full_url LIKE '/work/%'
+          OR brief_url = '/Shikhar_Shukla_Research.pdf'
+          OR full_url = '/Shikhar_Shukla_Research.pdf'
+        )
+    `;
+  }
 }

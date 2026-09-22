@@ -1,5 +1,6 @@
 import { BioSection } from '../components/bio-section';
 import { HomeVisual } from '../components/home-visual';
+import { ResearchList } from '../components/research-list';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
 export const dynamic = 'force-dynamic';
@@ -30,14 +31,7 @@ export default async function HomePage() {
         <div className="writing-index">
           <section aria-labelledby="research-heading">
             <h2 id="research-heading">Research</h2>
-            <div className="blogs-list">
-              {research.map((item) => (
-                <a key={item.href} className="blog-row" href={item.href}>
-                  <span>{item.title}</span>
-                  <time dateTime={item.dateTime}>{item.date}</time>
-                </a>
-              ))}
-            </div>
+            <ResearchList items={research} />
           </section>
 
           <section aria-labelledby="writing-heading">

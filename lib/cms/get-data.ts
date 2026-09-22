@@ -14,6 +14,7 @@ import {
   getSiteSettings
 } from './queries';
 import type { PortfolioData, SiteSettings } from './types';
+import { resolveResearchDocumentUrls } from './research-document-urls';
 
 export async function getPortfolioData(): Promise<PortfolioData> {
   if (!cmsEnabled()) {
@@ -59,10 +60,13 @@ export async function getPortfolioData(): Promise<PortfolioData> {
         ? researchRows
             .filter((r) => r.title.trim().length > 0 && r.slug.trim().length > 0)
             .map((r) => ({
+              slug: r.slug,
               href: `/work/${r.slug}`,
               title: r.title,
               date: r.dateDisplay,
-              dateTime: r.dateTime
+              dateTime: r.dateTime,
+              briefUrl: r.briefUrl,
+              fullUrl: r.fullUrl
             }))
         : fallback.research,
     writing:
@@ -142,12 +146,19 @@ function staticPortfolio(): PortfolioData {
       portfolio: staticSite.portfolio,
       resume: staticSite.resume
     },
-    research: staticResearch.map((r) => ({
-      href: r.href,
-      title: r.title,
-      date: r.date,
-      dateTime: r.dateTime
-    })),
+    research: staticResearch.map((r) => {
+      const slug = r.href.replace(/^\/work\//, '');
+      const { briefUrl, fullUrl } = resolveResearchDocumentUrls(slug, '', '');
+      return {
+        slug,
+        href: r.href,
+        title: r.title,
+        date: r.date,
+        dateTime: r.dateTime,
+        briefUrl,
+        fullUrl
+      };
+    }),
     writing: staticWriting.map((w) => ({
       href: w.href,
       title: w.title,

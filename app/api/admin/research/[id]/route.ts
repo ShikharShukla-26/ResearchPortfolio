@@ -40,6 +40,8 @@ export async function PUT(request: Request, { params }: Params) {
       dateTime: body.dateTime,
       metaLine: body.metaLine,
       bodyMdx: body.bodyMdx,
+      briefUrl: body.briefUrl,
+      fullUrl: body.fullUrl,
       published: body.published,
       sortOrder: body.sortOrder
     });
