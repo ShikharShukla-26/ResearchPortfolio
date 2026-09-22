@@ -1,4 +1,5 @@
 import { getSql } from './db';
+import { defaultSiteSettings } from './defaults';
 import { RESEARCH_DOCUMENT_DEFAULTS } from './research-document-urls';
 
 export async function runMigrations() {
@@ -87,6 +88,20 @@ export async function runMigrations() {
   await sql`
     ALTER TABLE cms_research
     ADD COLUMN IF NOT EXISTS full_url TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    UPDATE cms_site
+    SET data = data || ${sql.json({
+      phone: defaultSiteSettings.phone,
+      address: defaultSiteSettings.address
+    })},
+        updated_at = NOW()
+    WHERE id = 1
+      AND (
+        (data->>'phone' IS NULL OR data->>'phone' = '')
+        OR (data->>'address' IS NULL OR data->>'address' = '')
+      )
   `;
 
   for (const [slug, urls] of Object.entries(RESEARCH_DOCUMENT_DEFAULTS)) {

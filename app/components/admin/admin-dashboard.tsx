@@ -419,6 +419,22 @@ export function AdminDashboard() {
               />
             </div>
             <div className="admin-field">
+              <label>Phone</label>
+              <input
+                value={site.phone ?? ''}
+                onChange={(e) => setSite({ ...site, phone: e.target.value })}
+                placeholder="+91 …"
+              />
+            </div>
+            <div className="admin-field admin-field-wide">
+              <label>Address</label>
+              <textarea
+                value={site.address ?? ''}
+                onChange={(e) => setSite({ ...site, address: e.target.value })}
+                rows={2}
+              />
+            </div>
+            <div className="admin-field">
               <label>LinkedIn URL</label>
               <input
                 value={site.linkedin}

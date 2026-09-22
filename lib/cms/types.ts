@@ -2,6 +2,8 @@ export type SiteSettings = {
   name: string;
   tagline: string;
   email: string;
+  phone: string;
+  address: string;
   linkedin: string;
   substack: string;
   portfolio: string;
