@@ -27,7 +27,7 @@ function loadEnv(name) {
 
 loadEnv('.env.e2e');
 
-const base = 'https://shikhar-shukla-research.vercel.app';
+const base = 'https://shikhar-research.vercel.app';
 const password = process.env.E2E_ADMIN_PASSWORD ?? '';
 
 const loginRes = await fetch(`${base}/api/admin/login`, {

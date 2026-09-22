@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
             <p className="admin-hint" style={{ margin: 0 }}>
               In Vercel: open this project → <strong>Storage</strong> →{' '}
               <strong>Create database</strong> → <strong>Neon</strong> → connect
-              to <strong>shikhar-shukla-research</strong> (Production + Preview). Then{' '}
+              to <strong>shikhar-research</strong> (Production + Preview). Then{' '}
               <strong>Redeploy</strong> the latest deployment.
             </p>
           ) : null}

@@ -11,7 +11,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-**Production:** [https://shikhar-shukla-research.vercel.app](https://shikhar-shukla-research.vercel.app) (legacy alias: `next-mdx-blog-xi.vercel.app` still works).
+**Production (interim):** [https://shikhar-research.vercel.app](https://shikhar-research.vercel.app)
+
+### Custom URL without `vercel.app`
+
+Vercel free hosting always gives a `*.vercel.app` backup URL. For a clean link like **`https://research.shikharshukla.dev`**:
+
+1. In [Vercel → shikhar-research → Settings → Domains](https://vercel.com/dashboard), add **`research.shikharshukla.dev`** (or buy a domain such as `shikhar-research.com`).
+2. At your DNS provider (where `shikharshukla.dev` is registered), add the **CNAME** record Vercel shows (usually `research` → `cname.vercel-dns.com`).
+3. In Vercel **Environment Variables**, set **`NEXT_PUBLIC_SITE_URL`** = `https://research.shikharshukla.dev` for Production, then redeploy.
+
+Legacy aliases (`next-mdx-blog-xi.vercel.app`, `shikhar-shukla-research.vercel.app`) may still work until you remove them in Vercel.
 
 Without `POSTGRES_URL`, the site uses bundled fallback content (`app/site-data.ts` and `content/seed/*.mdx` for case studies).
 

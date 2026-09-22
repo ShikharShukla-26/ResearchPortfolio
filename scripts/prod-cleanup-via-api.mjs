@@ -28,7 +28,7 @@ loadEnv('.env.e2e');
 loadEnv('.env.local');
 
 const base =
-  process.env.PLAYWRIGHT_BASE_URL ?? 'https://shikhar-shukla-research.vercel.app';
+  process.env.PLAYWRIGHT_BASE_URL ?? 'https://shikhar-research.vercel.app';
 const password =
   process.env.E2E_ADMIN_PASSWORD ?? process.env.ADMIN_PASSWORD ?? '';
 

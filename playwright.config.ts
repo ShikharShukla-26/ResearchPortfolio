@@ -26,7 +26,7 @@ loadEnvFile('.env.local');
 loadEnvFile('.env.vercel.pull');
 loadEnvFile('.env.e2e');
 
-const productionUrl = 'https://shikhar-shukla-research.vercel.app';
+const productionUrl = 'https://shikhar-research.vercel.app';
 const baseURL =
   process.env.PLAYWRIGHT_BASE_URL ??
   (process.env.ALLOW_PROD_E2E === '1'
