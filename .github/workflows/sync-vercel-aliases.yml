@@ -1,22 +1,33 @@
 # Keeps shikhar-research.vercel.app and next-mdx-blog-xi.vercel.app on the same production deployment.
-# Add repo secret VERCEL_TOKEN (Vercel → Settings → Tokens).
+# One-time: add repo secret VERCEL_TOKEN — see docs/SETUP-AUTO-SYNC.md
 name: Sync Vercel production aliases
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-vercel-aliases
+  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
+
       - name: Sync production aliases
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          GITHUB_SHA: ${{ github.event_name == 'push' && github.sha || '' }}
+          VERCEL_ORG_ID: team_folaDmDuVQIuuekP8hHelcw2
+          VERCEL_PROJECT_ID: prj_44BNm66qJ0MBJWQsBZYo6jeltlDz
         run: npm run deploy:sync-aliases

@@ -19,7 +19,9 @@ After every **`git push`** to `main`, sync both URLs to the latest build (Vercel
 npm run deploy:sync-aliases
 ```
 
-Requires [Vercel CLI](https://vercel.com/docs/cli) logged in. See [`.cursor/skills/sync-vercel-production-urls/SKILL.md`](.cursor/skills/sync-vercel-production-urls/SKILL.md).
+**Automatic (recommended):** one-time setup in [docs/SETUP-AUTO-SYNC.md](docs/SETUP-AUTO-SYNC.md) — add **`VERCEL_TOKEN`** to GitHub Actions secrets; every push to `main` syncs both URLs.
+
+Manual: requires [Vercel CLI](https://vercel.com/docs/cli) logged in — see [`.cursor/skills/sync-vercel-production-urls/SKILL.md`](.cursor/skills/sync-vercel-production-urls/SKILL.md).
 
 ### Custom URL without `vercel.app`
 

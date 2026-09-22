@@ -54,6 +54,6 @@ Compare both URLs in incognito (footer **Contact** / latest copy should match):
 
 Database content is separate from aliases. Log in once at `/admin/login` (runs migrations) or edit **Site & bios → Address** in admin.
 
-## Optional CI
+## Automatic CI (Option B)
 
-Add `VERCEL_TOKEN` to GitHub repo secrets and run `npm run deploy:sync-aliases` in a workflow after push to `main` if the user wants this fully automatic without local CLI.
+One-time: [docs/SETUP-AUTO-SYNC.md](../../docs/SETUP-AUTO-SYNC.md) — GitHub secret **`VERCEL_TOKEN`**. Workflow: `.github/workflows/sync-vercel-aliases.yml` runs on every push to `main`.
