@@ -6,8 +6,7 @@ export const defaultSiteSettings: SiteSettings = {
     'Behavioral & UX research — qualitative, ethnographic and heuristic methods. Vadodara, India.',
   email: 'shikharshukla678@gmail.com',
   phone: '+91 9825496937',
-  address:
-    '122/C, Vishwamitry Township, Mangalpur, Vadodara, Gujarat 390011, India',
+  address: 'Mangalpur, Vadodara, Gujarat 390011, India',
   linkedin: 'https://www.linkedin.com/in/shikhar-shukla-2094ba135/',
   substack: 'https://shikharshukla26.substack.com',
   portfolio: 'https://www.shikharshukla.dev',

@@ -101,6 +101,7 @@ export async function runMigrations() {
       AND (
         (data->>'phone' IS NULL OR data->>'phone' = '')
         OR (data->>'address' IS NULL OR data->>'address' = '')
+        OR data->>'address' LIKE '122/C%'
       )
   `;
 
