@@ -23,6 +23,8 @@ Vercel free hosting always gives a `*.vercel.app` backup URL. For a clean link l
 
 Legacy aliases (`next-mdx-blog-xi.vercel.app`, `shikhar-shukla-research.vercel.app`) may still work until you remove them in Vercel.
 
+**Incognito shows Vercel login?** In Vercel → **shikhar-research** → **Settings → Deployment Protection**, turn off **Vercel Authentication / SSO** for Production (or only protect Preview). SSO on `*.vercel.app` blocks public visitors until they log into your Vercel team.
+
 Without `POSTGRES_URL`, the site uses bundled fallback content (`app/site-data.ts` and `content/seed/*.mdx` for case studies).
 
 ## Admin dashboard (after deploy)
