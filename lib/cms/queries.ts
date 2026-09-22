@@ -7,6 +7,7 @@ import type {
   WritingItem
 } from './types';
 import { defaultSiteSettings } from './defaults';
+import { mergeSiteSettings } from './merge-site-settings';
 import { resolveResearchDocumentUrls } from './research-document-urls';
 
 function mapResearch(row: Record<string, unknown>): ResearchItem {
@@ -42,7 +43,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   if (!rows[0]?.data) {
     return defaultSiteSettings;
   }
-  return { ...defaultSiteSettings, ...rows[0].data };
+  return mergeSiteSettings(rows[0].data);
 }
 
 export async function updateSiteSettings(data: SiteSettings) {

@@ -11,7 +11,10 @@ export function SiteContact({ site }: { site: SiteSettings }) {
   if (!hasContact) return null;
 
   return (
-    <section className="site-contact" aria-label="Contact">
+    <section className="site-contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" className="site-contact-heading">
+        Contact
+      </h2>
       {(site.email || site.phone) && (
         <p className="site-contact-line">
           {site.email ? (
