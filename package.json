@@ -4,6 +4,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "delete": "rm -rf app/n"
   },
   "dependencies": {
@@ -26,6 +28,7 @@
     "sugar-high": "^0.9.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.15.29",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",

@@ -34,6 +34,15 @@ Without `POSTGRES_URL`, the site uses bundled fallback content (`app/site-data.t
 
 Changes revalidate the public site on save.
 
+## E2E tests (browser)
+
+```bash
+# Copy .env.e2e.example → .env.e2e and set E2E_ADMIN_PASSWORD to your Vercel ADMIN_PASSWORD
+npm run test:e2e
+```
+
+See `e2e/TEST-CASES.md` for the full matrix (5 cases × admin feature). HTML report: `e2e-report/index.html`.
+
 ## Environment variables
 
 See [`.env.example`](.env.example).
