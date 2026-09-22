@@ -17,10 +17,14 @@ If token creation is blocked, ask the **Vercel team owner** to create the token 
 
 ### 2. Add the token to GitHub
 
-1. Open [github.com/ShikharShukla-26/ResearchPortfolio/settings/secrets/actions](https://github.com/ShikharShukla-26/ResearchPortfolio/settings/secrets/actions).
-2. **New repository secret**
-3. Name: **`VERCEL_TOKEN`**
-4. Value: paste the Vercel token → **Add secret**
+**Easy (Vercel CLI already logged in on this PC):**
+
+```bash
+gh auth login -h github.com -p https -w
+npm run deploy:install-github-secret
+```
+
+**Manual:** [New repository secret](https://github.com/ShikharShukla-26/ResearchPortfolio/settings/secrets/actions/new) → name **`VERCEL_TOKEN`** → paste the Vercel token.
 
 ### 3. Confirm
 

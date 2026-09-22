@@ -38,8 +38,10 @@ function sleep(ms) {
 function runVercel(args) {
   const bin = vercelCommand();
   const env = { ...process.env };
-  if (!env.VERCEL_TOKEN) {
-    throw new Error('VERCEL_TOKEN is not set.');
+  if (process.env.GITHUB_ACTIONS === 'true' && !env.VERCEL_TOKEN) {
+    throw new Error(
+      'VERCEL_TOKEN is not set. Add it to GitHub Actions secrets (see docs/SETUP-AUTO-SYNC.md).'
+    );
   }
   try {
     return execFileSync(bin, [...args, '--non-interactive'], {
