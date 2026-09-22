@@ -6,7 +6,7 @@ import { getPortfolioData } from '@/lib/cms/get-data';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const { site, research, writing, elsewhere, logs } = await getPortfolioData();
+  const { site, research, writing, logs } = await getPortfolioData();
 
   return (
     <div className="home-layout">
@@ -70,27 +70,6 @@ export default async function HomePage() {
               ) : null}
             </section>
           ) : null}
-
-          <section aria-labelledby="elsewhere-heading">
-            <h2 id="elsewhere-heading">Elsewhere</h2>
-            <ul className="notes-list">
-              {elsewhere.map((link) => (
-                <li key={link.href + link.label}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith('/') ? undefined : '_blank'}
-                    rel={
-                      link.href.startsWith('/')
-                        ? undefined
-                        : 'noopener noreferrer'
-                    }
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
         </div>
       </div>
 
