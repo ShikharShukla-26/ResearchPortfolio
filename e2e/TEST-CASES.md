@@ -16,7 +16,7 @@ Set **`E2E_ADMIN_PASSWORD`** in `.env.e2e` (copy from `.env.e2e.example`) to mat
 Default target: **`http://127.0.0.1:3000`** (run `npm run dev` first).
 
 Do **not** run against production unless intentional:  
-`PLAYWRIGHT_BASE_URL=https://next-mdx-blog-xi.vercel.app ALLOW_PROD_E2E=1 npm run test:e2e`
+`PLAYWRIGHT_BASE_URL=https://shikhar-shukla-research.vercel.app ALLOW_PROD_E2E=1 npm run test:e2e`
 
 After accidental prod runs: `npm run cms:cleanup-test-data` or admin → **Remove test junk**.
 

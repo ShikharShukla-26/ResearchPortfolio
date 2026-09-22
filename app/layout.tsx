@@ -2,13 +2,14 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import { getSiteSettingsSafe } from '@/lib/cms/get-data';
+import { getSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteSettingsSafe();
   return {
-    metadataBase: new URL('https://shikharshukla.dev'),
+    metadataBase: new URL(getSiteUrl()),
     alternates: {
       canonical: '/'
     },

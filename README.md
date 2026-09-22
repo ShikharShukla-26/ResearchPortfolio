@@ -11,6 +11,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+**Production:** [https://shikhar-shukla-research.vercel.app](https://shikhar-shukla-research.vercel.app) (legacy alias: `next-mdx-blog-xi.vercel.app` still works).
+
 Without `POSTGRES_URL`, the site uses bundled fallback content (`app/site-data.ts` and `content/seed/*.mdx` for case studies).
 
 ## Admin dashboard (after deploy)

@@ -1,6 +1,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compileMDX } from 'next-mdx-remote/rsc';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -25,41 +26,31 @@ function loadEnv(name) {
 }
 
 loadEnv('.env.e2e');
-loadEnv('.env.local');
 
-const base =
-  process.env.PLAYWRIGHT_BASE_URL ?? 'https://shikhar-shukla-research.vercel.app';
-const password =
-  process.env.E2E_ADMIN_PASSWORD ?? process.env.ADMIN_PASSWORD ?? '';
-
-if (!password) {
-  console.error('Set E2E_ADMIN_PASSWORD in .env.e2e');
-  process.exit(1);
-}
+const base = 'https://shikhar-shukla-research.vercel.app';
+const password = process.env.E2E_ADMIN_PASSWORD ?? '';
 
 const loginRes = await fetch(`${base}/api/admin/login`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ password })
 });
-
 const setCookie = loginRes.headers.getSetCookie?.() ?? [];
 const cookie = setCookie.map((c) => c.split(';')[0]).join('; ');
 
-if (!loginRes.ok) {
-  console.error('Login failed', loginRes.status, await loginRes.text());
-  process.exit(1);
-}
-
-const cleanRes = await fetch(`${base}/api/admin/cleanup-test-data`, {
-  method: 'POST',
-  headers: cookie ? { Cookie: cookie } : {}
+const listRes = await fetch(`${base}/api/admin/research`, {
+  headers: { Cookie: cookie }
 });
-
-const body = await cleanRes.json().catch(() => ({}));
-if (!cleanRes.ok) {
-  console.error('Cleanup failed', cleanRes.status, body);
+const items = await listRes.json();
+const item = items.find((i) => i.slug === 'six-week-silence');
+if (!item) {
+  console.error('Not found');
   process.exit(1);
 }
-
-console.log('Production cleanup OK:', body);
+console.log('title', item.title, 'bodyLen', item.bodyMdx?.length);
+try {
+  await compileMDX({ source: item.bodyMdx, components: {} });
+  console.log('DB body compile OK');
+} catch (err) {
+  console.error('DB body compile FAIL', err.message);
+}

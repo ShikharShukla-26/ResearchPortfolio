@@ -4,7 +4,7 @@ import { listResearch } from '@/lib/cms/queries';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const SITE_URL = 'https://shikharshukla.dev';
+import { getSiteUrl } from '@/lib/site-url';
 
 async function getSeedSlugs() {
   const seedDir = path.join(process.cwd(), 'content', 'seed');
@@ -17,7 +17,8 @@ async function getSeedSlugs() {
 }
 
 export default async function sitemap() {
-  const routes = [{ url: `${SITE_URL}/`, lastModified: new Date().toISOString() }];
+  const siteUrl = getSiteUrl();
+  const routes = [{ url: `${siteUrl}/`, lastModified: new Date().toISOString() }];
 
   let slugs: string[] = [];
   if (cmsEnabled()) {
@@ -32,19 +33,19 @@ export default async function sitemap() {
   }
 
   const work = slugs.map((slug) => ({
-    url: `${SITE_URL}/work/${slug}`,
+    url: `${siteUrl}/work/${slug}`,
     lastModified: new Date().toISOString()
   }));
 
   const data = await getPortfolioData();
   const logs = data.logs.map((log) => ({
-    url: `${SITE_URL}${log.href}`,
+    url: `${siteUrl}${log.href}`,
     lastModified: new Date().toISOString()
   }));
 
   if (data.logs.length > 0) {
     routes.push({
-      url: `${SITE_URL}/logs`,
+      url: `${siteUrl}/logs`,
       lastModified: new Date().toISOString()
     });
   }
