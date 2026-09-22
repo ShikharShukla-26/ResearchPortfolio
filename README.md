@@ -11,7 +11,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-**Production (interim):** [https://shikhar-research.vercel.app](https://shikhar-research.vercel.app)
+**Production:** [https://shikhar-research.vercel.app](https://shikhar-research.vercel.app) · legacy [next-mdx-blog-xi.vercel.app](https://next-mdx-blog-xi.vercel.app)
+
+After every **`git push`** to `main`, sync both URLs to the latest build (Vercel does not always move every alias):
+
+```bash
+npm run deploy:sync-aliases
+```
+
+Requires [Vercel CLI](https://vercel.com/docs/cli) logged in. See [`.cursor/skills/sync-vercel-production-urls/SKILL.md`](.cursor/skills/sync-vercel-production-urls/SKILL.md).
 
 ### Custom URL without `vercel.app`
 
