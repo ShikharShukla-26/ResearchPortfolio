@@ -98,7 +98,7 @@ async function assignAliasApi(deploymentHostOrId, alias) {
 }
 
 async function assignAliasApiWhenReady(deploymentHostOrId, alias) {
-  const maxAttempts = 72;
+  const maxAttempts = 12;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
       await assignAliasApi(deploymentHostOrId, alias);

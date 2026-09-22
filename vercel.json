@@ -1,4 +1,4 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "npm run build && node scripts/sync-vercel-production-aliases.mjs"
+  "buildCommand": "npm run build"
 }

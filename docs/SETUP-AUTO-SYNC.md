@@ -1,6 +1,6 @@
 # Automatic sync of both Vercel URLs
 
-**Primary (no GitHub secret):** each **production** Vercel build runs `scripts/sync-vercel-production-aliases.mjs` after `npm run build` (see `vercel.json`). The project must have **`VERCEL_TOKEN`** in **Production** environment variables (same token as your Vercel account; used only to assign aliases).
+**Primary (no GitHub secret):** on each **production** deploy, Next.js [`instrumentation.ts`](../instrumentation.ts) runs `scripts/sync-vercel-production-aliases.mjs` on the first Node cold start (deployment is **Ready** by then). The Vercel project must have **`VERCEL_TOKEN`** in **Production** environment variables (used only to assign aliases).
 
 **Optional backup:** GitHub Actions [`.github/workflows/sync-vercel-aliases.yml`](../.github/workflows/sync-vercel-aliases.yml) runs on push to `main` / manual run if **`VERCEL_TOKEN`** is set as a repo secret:
 
