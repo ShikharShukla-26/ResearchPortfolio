@@ -1,6 +1,5 @@
 /**
  * After a production deploy, point both *.vercel.app hostnames at this deployment.
- * Runs once per Node runtime (serverless cold start); alias updates are idempotent.
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
@@ -12,15 +11,15 @@ export async function register() {
   if (g.__vercelAliasSync) return;
   g.__vercelAliasSync = true;
 
-  const { execFile } = await import('node:child_process');
-  const { promisify } = await import('node:util');
-  const run = promisify(execFile);
-
-  void run('node', ['scripts/sync-vercel-production-aliases.mjs'], {
-    env: process.env,
-    cwd: process.cwd(),
-    maxBuffer: 10 * 1024 * 1024
-  }).catch((err) => {
-    console.error('[sync-vercel-aliases]', err.stderr ?? err.message ?? err);
-  });
+  try {
+    const { syncProductionAliases } = await import(
+      './lib/vercel/sync-production-aliases'
+    );
+    await syncProductionAliases();
+  } catch (err) {
+    console.error(
+      '[sync-vercel-aliases]',
+      err instanceof Error ? err.message : err
+    );
+  }
 }

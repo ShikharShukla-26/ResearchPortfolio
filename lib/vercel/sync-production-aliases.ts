@@ -1,12 +1,3 @@
-#!/usr/bin/env node
-/**
- * Point all production vanity URLs at the correct production deployment.
- *
- * - On Vercel production builds: aliases → current deployment (VERCEL_URL).
- * - Locally / GitHub Actions: latest Ready production (optional GITHUB_SHA / VERCEL_GIT_COMMIT_SHA).
- *
- * Usage: npm run deploy:sync-aliases
- */
 import { execFileSync, execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -32,6 +23,13 @@ const EXPECTED_SHA = (
 const POLL_MS = 15_000;
 const MAX_POLLS = 48;
 
+type DeploymentRow = {
+  state?: string;
+  target?: string;
+  url?: string;
+  meta?: { githubCommitSha?: string };
+};
+
 function vercelCommand() {
   if (process.platform === 'win32') {
     const appData = process.env.APPDATA ?? '';
@@ -41,7 +39,7 @@ function vercelCommand() {
   return 'vercel';
 }
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -49,18 +47,20 @@ function apiToken() {
   return process.env.VERCEL_TOKEN?.trim() ?? '';
 }
 
-function teamQuery(sep = '?') {
-  return TEAM_ID ? `${sep}teamId=${encodeURIComponent(TEAM_ID)}` : '';
+function teamQuery(apiPath: string) {
+  if (!TEAM_ID) return '';
+  const sep = apiPath.includes('?') ? '&' : '?';
+  return `${sep}teamId=${encodeURIComponent(TEAM_ID)}`;
 }
 
-async function apiRequest(method, apiPath, body) {
+async function apiRequest(method: string, apiPath: string, body?: unknown) {
   const token = apiToken();
   if (!token) {
     throw new Error(
       'VERCEL_TOKEN is not set (Vercel project env or local login).'
     );
   }
-  const url = `https://api.vercel.com${apiPath}${teamQuery(apiPath.includes('?') ? '&' : '?')}`;
+  const url = `https://api.vercel.com${apiPath}${teamQuery(apiPath)}`;
   const res = await fetch(url, {
     method,
     headers: {
@@ -70,7 +70,7 @@ async function apiRequest(method, apiPath, body) {
     body: body ? JSON.stringify(body) : undefined
   });
   const text = await res.text();
-  let data;
+  let data: Record<string, unknown>;
   try {
     data = text ? JSON.parse(text) : {};
   } catch {
@@ -89,22 +89,25 @@ async function listProductionDeploymentsApi() {
     'GET',
     `/v6/deployments?projectId=${encodeURIComponent(PROJECT_ID)}&target=production&limit=30`
   );
-  return data.deployments ?? [];
+  return (data.deployments as DeploymentRow[] | undefined) ?? [];
 }
 
-async function assignAliasApi(deploymentHostOrId, alias) {
+async function assignAliasApi(deploymentHostOrId: string, alias: string) {
   const id = encodeURIComponent(deploymentHostOrId);
   await apiRequest('POST', `/v2/deployments/${id}/aliases`, { alias });
 }
 
-async function assignAliasApiWhenReady(deploymentHostOrId, alias) {
+async function assignAliasApiWhenReady(
+  deploymentHostOrId: string,
+  alias: string
+) {
   const maxAttempts = 12;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
       await assignAliasApi(deploymentHostOrId, alias);
       return;
     } catch (err) {
-      const msg = err.message ?? String(err);
+      const msg = err instanceof Error ? err.message : String(err);
       const notReady =
         msg.includes('deployment_not_ready') || msg.includes('not `READY`');
       if (notReady && attempt < maxAttempts - 1) {
@@ -119,7 +122,7 @@ async function assignAliasApiWhenReady(deploymentHostOrId, alias) {
   }
 }
 
-function pickDeployment(deployments) {
+function pickDeployment(deployments: DeploymentRow[]) {
   const production = deployments.filter(
     (d) => d.state === 'READY' && d.target === 'production'
   );
@@ -158,7 +161,7 @@ async function resolveDeploymentHostApi() {
   throw new Error(`No Ready production deployment for project "${PROJECT}".`);
 }
 
-function runVercel(args) {
+function runVercel(args: string[]) {
   const bin = vercelCommand();
   const env = { ...process.env };
   try {
@@ -179,7 +182,7 @@ function runVercel(args) {
 
 function listProductionDeploymentsCli() {
   const raw = runVercel(['ls', PROJECT, '--json']);
-  const data = JSON.parse(raw);
+  const data = JSON.parse(raw) as { deployments?: DeploymentRow[] };
   return data.deployments ?? [];
 }
 
@@ -198,14 +201,14 @@ async function resolveDeploymentHostCli() {
   throw new Error(`No Ready production deployment for project "${PROJECT}".`);
 }
 
-async function syncAliasesToHost(deploymentHost) {
+async function syncAliasesToHost(deploymentHost: string) {
   console.log(`Production deployment: ${deploymentHost}`);
   for (const alias of ALIASES) {
     console.log(`→ ${alias}`);
     if (apiToken()) {
-      const onVercelBuild =
+      const onVercelProd =
         process.env.VERCEL === '1' && process.env.VERCEL_ENV === 'production';
-      if (onVercelBuild) {
+      if (onVercelProd) {
         await assignAliasApiWhenReady(deploymentHost, alias);
       } else {
         await assignAliasApi(deploymentHost, alias);
@@ -216,7 +219,8 @@ async function syncAliasesToHost(deploymentHost) {
   }
 }
 
-async function main() {
+/** Point both production vanity URLs at the correct deployment. */
+export async function syncProductionAliases() {
   if (
     process.env.VERCEL === '1' &&
     process.env.VERCEL_ENV !== 'production'
@@ -243,8 +247,3 @@ async function main() {
   await syncAliasesToHost(deploymentHost);
   console.log('Done. Both URLs should match the latest production build.');
 }
-
-main().catch((err) => {
-  console.error(err.message ?? err);
-  process.exit(1);
-});

@@ -5,7 +5,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "cms:cleanup-test-data": "node scripts/cleanup-test-data.mjs",
-    "deploy:sync-aliases": "node scripts/sync-vercel-production-aliases.mjs",
+    "deploy:sync-aliases": "node --experimental-strip-types scripts/sync-vercel-production-aliases.cli.ts",
     "deploy:install-github-secret": "node scripts/install-vercel-github-secret.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

@@ -18,12 +18,13 @@ This project uses **two** public `*.vercel.app` hostnames:
 
 Git pushes create a new production deployment, but **only one alias may move automatically**. The other can stay pinned to an old deployment (stale Contact modal, address, etc.).
 
-## Required workflow after every deploy
+## After every deploy
 
-From repo root `next-mdx-blog/`:
+Production deploys run alias sync automatically on the first Node cold start (`instrumentation.ts`), if `VERCEL_TOKEN` is set on the Vercel project.
+
+If one URL still looks stale, from `next-mdx-blog/`:
 
 ```bash
-git push origin main
 npm run deploy:sync-aliases
 ```
 
@@ -37,7 +38,7 @@ Requires Vercel CLI logged in (`vercel login`) or `VERCEL_TOKEN` in the environm
 
 ## What the script does
 
-[`scripts/sync-vercel-production-aliases.mjs`](../../scripts/sync-vercel-production-aliases.mjs):
+[`lib/vercel/sync-production-aliases.ts`](../../lib/vercel/sync-production-aliases.ts) (CLI: `npm run deploy:sync-aliases`):
 
 1. Lists deployments JSON for project `shikhar-research`
 2. Picks the newest **Ready** **production** deployment
