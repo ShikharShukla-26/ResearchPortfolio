@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    "app/n/ai/*.tsx"
+    "app/n/ai/*.tsx",
+    "scripts/**/*.cli.ts"
   ]
 }
