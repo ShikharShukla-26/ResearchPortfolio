@@ -97,6 +97,28 @@ async function assignAliasApi(deploymentHostOrId, alias) {
   await apiRequest('POST', `/v2/deployments/${id}/aliases`, { alias });
 }
 
+async function assignAliasApiWhenReady(deploymentHostOrId, alias) {
+  const maxAttempts = 72;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      await assignAliasApi(deploymentHostOrId, alias);
+      return;
+    } catch (err) {
+      const msg = err.message ?? String(err);
+      const notReady =
+        msg.includes('deployment_not_ready') || msg.includes('not `READY`');
+      if (notReady && attempt < maxAttempts - 1) {
+        console.log(
+          `Deployment not ready for alias ${alias}; retry ${attempt + 1}/${maxAttempts}…`
+        );
+        await sleep(5000);
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
 function pickDeployment(deployments) {
   const production = deployments.filter(
     (d) => d.state === 'READY' && d.target === 'production'
@@ -181,7 +203,13 @@ async function syncAliasesToHost(deploymentHost) {
   for (const alias of ALIASES) {
     console.log(`→ ${alias}`);
     if (apiToken()) {
-      await assignAliasApi(deploymentHost, alias);
+      const onVercelBuild =
+        process.env.VERCEL === '1' && process.env.VERCEL_ENV === 'production';
+      if (onVercelBuild) {
+        await assignAliasApiWhenReady(deploymentHost, alias);
+      } else {
+        await assignAliasApi(deploymentHost, alias);
+      }
     } else {
       runVercel(['alias', 'set', deploymentHost, alias]);
     }
