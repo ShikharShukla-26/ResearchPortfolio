@@ -12,7 +12,7 @@ export function MarkdownBody({ source }: { source: string }) {
         h3: (props) => <h3 className="content-subheading" {...props} />,
         ul: (props) => <ul className="content-list" {...props} />,
         ol: (props) => <ol className="content-list content-ordered-list" {...props} />,
-        a: ({ href, children, ...props }) => (
+        a: ({ href, children, node: _node, ...props }) => (
           <NewTabAnchor href={href} {...props}>
             {children}
           </NewTabAnchor>

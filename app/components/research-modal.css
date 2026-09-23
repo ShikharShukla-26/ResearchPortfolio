@@ -47,6 +47,9 @@
 }
 
 .research-modal-btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
   border: 1px solid var(--border-subtle, #444);
   background: var(--surface-subtle, #1a1a1a);
   color: var(--text-copy, #eee);

@@ -32,12 +32,6 @@ export function ResearchList({ items }: { items: ResearchListItem[] }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [active, close]);
 
-  function openExternal(url: string) {
-    if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
-    close();
-  }
-
   return (
     <>
       <div className="blogs-list">
@@ -67,15 +61,14 @@ export function ResearchList({ items }: { items: ResearchListItem[] }) {
 
           if (singleUrl) {
             return (
-              <button
+              <NewTabAnchor
                 key={item.href}
-                type="button"
-                className="blog-row blog-row-button"
-                onClick={() => openExternal(singleUrl)}
+                className="blog-row"
+                href={singleUrl}
               >
                 <span>{item.title}</span>
                 <time dateTime={item.dateTime}>{item.date}</time>
-              </button>
+              </NewTabAnchor>
             );
           }
 
@@ -106,22 +99,35 @@ export function ResearchList({ items }: { items: ResearchListItem[] }) {
             </h3>
             <p className="research-modal-hint">Choose a version to open.</p>
             <div className="research-modal-actions">
-              <button
-                type="button"
-                className="research-modal-btn"
-                disabled={!active.briefUrl}
-                onClick={() => openExternal(active.briefUrl)}
-              >
-                Brief version
-              </button>
-              <button
-                type="button"
-                className="research-modal-btn primary"
-                disabled={!active.fullUrl}
-                onClick={() => openExternal(active.fullUrl)}
-              >
-                Full version
-              </button>
+              {active.briefUrl ? (
+                <NewTabAnchor
+                  className="research-modal-btn"
+                  href={active.briefUrl}
+                  onClick={close}
+                >
+                  Brief version
+                </NewTabAnchor>
+              ) : (
+                <span className="research-modal-btn" aria-disabled="true">
+                  Brief version
+                </span>
+              )}
+              {active.fullUrl ? (
+                <NewTabAnchor
+                  className="research-modal-btn primary"
+                  href={active.fullUrl}
+                  onClick={close}
+                >
+                  Full version
+                </NewTabAnchor>
+              ) : (
+                <span
+                  className="research-modal-btn primary"
+                  aria-disabled="true"
+                >
+                  Full version
+                </span>
+              )}
             </div>
             <button type="button" className="research-modal-cancel" onClick={close}>
               Cancel
