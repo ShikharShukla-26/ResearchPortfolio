@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 
 export default function WorkLayout({
   children
@@ -8,9 +8,9 @@ export default function WorkLayout({
   return (
     <>
       <nav className="work-nav" aria-label="Back to home">
-        <Link href="/" className="text-nav work-back">
+        <NewTabAnchor href="/" className="text-nav work-back">
           &larr; Shikhar Shukla
-        </Link>
+        </NewTabAnchor>
       </nav>
       {children}
     </>

@@ -1,5 +1,6 @@
 import { BioSection } from '../components/bio-section';
 import { HomeVisual } from '../components/home-visual';
+import { NewTabAnchor } from '../components/new-tab-anchor';
 import { ResearchList } from '../components/research-list';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
@@ -12,14 +13,9 @@ export default async function HomePage() {
     <div className="home-layout">
       <div className="home-copy">
         <h1 className="site-title">
-          <a
-            href={site.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="site-title-link"
-          >
+          <NewTabAnchor href={site.linkedin} className="site-title-link">
             {site.name}
-          </a>
+          </NewTabAnchor>
         </h1>
         <p className="content-subtitle site-tagline">{site.tagline}</p>
 
@@ -38,16 +34,14 @@ export default async function HomePage() {
             <h2 id="writing-heading">Writing</h2>
             <div className="blogs-list">
               {writing.map((item) => (
-                <a
+                <NewTabAnchor
                   key={item.href}
                   className="blog-row"
                   href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <span>{item.title}</span>
                   <time dateTime={item.dateTime}>{item.date}</time>
-                </a>
+                </NewTabAnchor>
               ))}
             </div>
           </section>
@@ -57,15 +51,19 @@ export default async function HomePage() {
               <h2 id="logs-heading">Logs</h2>
               <div className="blogs-list">
                 {logs.slice(0, 5).map((item) => (
-                  <a key={item.href} className="blog-row" href={item.href}>
+                  <NewTabAnchor
+                    key={item.href}
+                    className="blog-row"
+                    href={item.href}
+                  >
                     <span>{item.title}</span>
                     <time dateTime={item.dateTime}>{item.date}</time>
-                  </a>
+                  </NewTabAnchor>
                 ))}
               </div>
               {logs.length > 5 ? (
                 <p className="content-paragraph">
-                  <a href="/logs">View all logs</a>
+                  <NewTabAnchor href="/logs">View all logs</NewTabAnchor>
                 </p>
               ) : null}
             </section>

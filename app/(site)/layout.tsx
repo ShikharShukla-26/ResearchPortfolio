@@ -1,5 +1,6 @@
 import '../site.css';
 import { ContactFooter } from '../components/contact-footer';
+import { NewTabAnchor } from '../components/new-tab-anchor';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
 export const dynamic = 'force-dynamic';
@@ -14,15 +15,13 @@ export default async function SiteLayout({
       <article className="content-frame">{children}</article>
       <footer className="site-footer">
         {footer.map((link) => (
-          <a
+          <NewTabAnchor
             key={link.label + link.href}
             href={link.href}
             className="text-nav"
-            target={link.href.startsWith('/') ? undefined : '_blank'}
-            rel={link.href.startsWith('/') ? undefined : 'noopener noreferrer'}
           >
             {link.label}
-          </a>
+          </NewTabAnchor>
         ))}
         <ContactFooter site={site} />
       </footer>

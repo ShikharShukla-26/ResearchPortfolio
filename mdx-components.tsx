@@ -1,5 +1,5 @@
 import React, { ComponentPropsWithoutRef } from 'react';
-import Link from 'next/link';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 import { highlight } from 'sugar-high';
 
 type HeadingProps = ComponentPropsWithoutRef<'h1'>;
@@ -30,27 +30,11 @@ const components = {
   strong: (props: ComponentPropsWithoutRef<'strong'>) => (
     <strong className="content-strong" {...props} />
   ),
-  a: ({ href, children, ...props }: AnchorProps) => {
-    if (href?.startsWith('/') && !/\.(pdf|pptx|docx?|xlsx?)$/i.test(href)) {
-      return (
-        <Link href={href} {...props}>
-          {children}
-        </Link>
-      );
-    }
-    if (href?.startsWith('#') || href?.startsWith('/')) {
-      return (
-        <a href={href} {...props}>
-          {children}
-        </a>
-      );
-    }
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
-        {children}
-      </a>
-    );
-  },
+  a: ({ href, children, ...props }: AnchorProps) => (
+    <NewTabAnchor href={href} {...props}>
+      {children}
+    </NewTabAnchor>
+  ),
   code: ({ children, ...props }: ComponentPropsWithoutRef<'code'>) => {
     const codeHTML = highlight(children as string);
     return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;

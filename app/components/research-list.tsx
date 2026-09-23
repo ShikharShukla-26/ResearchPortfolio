@@ -5,6 +5,7 @@ import {
   researchHasVersionChoice,
   researchSingleExternalUrl
 } from '@/lib/cms/research-document-urls';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 import './research-modal.css';
 
 export type ResearchListItem = {
@@ -79,10 +80,10 @@ export function ResearchList({ items }: { items: ResearchListItem[] }) {
           }
 
           return (
-            <a key={item.href} className="blog-row" href={item.href}>
+            <NewTabAnchor key={item.href} className="blog-row" href={item.href}>
               <span>{item.title}</span>
               <time dateTime={item.dateTime}>{item.date}</time>
-            </a>
+            </NewTabAnchor>
           );
         })}
       </div>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { SiteSettings } from '@/lib/cms/types';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 import './research-modal.css';
 import './contact-modal.css';
 
@@ -114,14 +115,12 @@ export function ContactFooter({ site }: { site: SiteSettings }) {
                   <span className="contact-modal-label">{row.label}</span>
                   <div className="contact-modal-value-wrap">
                     {row.href ? (
-                      <a
+                      <NewTabAnchor
                         className="contact-modal-value"
                         href={row.href}
-                        target={row.href.startsWith('mailto:') ? undefined : undefined}
-                        rel={row.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
                         {row.value}
-                      </a>
+                      </NewTabAnchor>
                     ) : (
                       <span className="contact-modal-value">{row.value}</span>
                     )}

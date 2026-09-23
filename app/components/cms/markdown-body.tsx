@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 
 export function MarkdownBody({ source }: { source: string }) {
   return (
@@ -11,7 +12,11 @@ export function MarkdownBody({ source }: { source: string }) {
         h3: (props) => <h3 className="content-subheading" {...props} />,
         ul: (props) => <ul className="content-list" {...props} />,
         ol: (props) => <ol className="content-list content-ordered-list" {...props} />,
-        a: (props) => <a {...props} />,
+        a: ({ href, children, ...props }) => (
+          <NewTabAnchor href={href} {...props}>
+            {children}
+          </NewTabAnchor>
+        ),
         img: (props) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img {...props} alt={props.alt ?? ''} className="cms-log-image" />

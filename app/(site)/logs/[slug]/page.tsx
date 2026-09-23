@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MarkdownBody } from '@/app/components/cms/markdown-body';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 import { cmsEnabled } from '@/lib/cms/db';
 import { getLogBySlug } from '@/lib/cms/queries';
 
@@ -30,9 +30,9 @@ export default async function LogPage({ params }: PageProps) {
   return (
     <>
       <nav className="work-nav" aria-label="Back to logs">
-        <Link href="/logs" className="text-nav work-back">
+        <NewTabAnchor href="/logs" className="text-nav work-back">
           &larr; Logs
-        </Link>
+        </NewTabAnchor>
       </nav>
       <h1 className="content-title">{log.title}</h1>
       {log.dateDisplay ? (

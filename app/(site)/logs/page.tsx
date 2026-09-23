@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { NewTabAnchor } from '@/app/components/new-tab-anchor';
 import { getPortfolioData } from '@/lib/cms/get-data';
 
 export const dynamic = 'force-dynamic';
@@ -9,9 +9,9 @@ export default async function LogsIndexPage() {
   return (
     <>
       <nav className="work-nav" aria-label="Back to home">
-        <Link href="/" className="text-nav work-back">
+        <NewTabAnchor href="/" className="text-nav work-back">
           &larr; Shikhar Shukla
-        </Link>
+        </NewTabAnchor>
       </nav>
       <h1 className="content-title">Logs</h1>
       <p className="content-paragraph">
@@ -22,10 +22,10 @@ export default async function LogsIndexPage() {
       ) : (
         <div className="blogs-list">
           {data.logs.map((log) => (
-            <a key={log.href} className="blog-row" href={log.href}>
+            <NewTabAnchor key={log.href} className="blog-row" href={log.href}>
               <span>{log.title}</span>
               <time dateTime={log.dateTime}>{log.date}</time>
-            </a>
+            </NewTabAnchor>
           ))}
         </div>
       )}

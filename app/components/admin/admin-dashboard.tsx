@@ -364,7 +364,7 @@ export function AdminDashboard() {
           <p className="admin-hint">Changes publish immediately on save.</p>
         </div>
         <div className="admin-actions">
-          <a href="/" className="text-nav">
+          <a href="/" className="text-nav" target="_blank" rel="noopener noreferrer">
             View site
           </a>
           <button type="button" onClick={() => void cleanupTestData()}>
