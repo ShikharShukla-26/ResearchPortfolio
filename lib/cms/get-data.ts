@@ -21,6 +21,9 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     return staticPortfolio();
   }
 
+  const { ensureCmsSchema } = await import('./ensure');
+  await ensureCmsSchema();
+
   let site: SiteSettings;
   try {
     site = await getSiteSettings();
