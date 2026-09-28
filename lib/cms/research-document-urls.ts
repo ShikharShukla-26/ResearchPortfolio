@@ -28,14 +28,16 @@ export const RESEARCH_DOCUMENT_DEFAULTS: Record<
       'https://docs.google.com/document/d/1iomDHdY3jA-S0iMA7nJts3L1yA1mdAne/view'
   },
   'surface-compliance': {
-    briefUrl: '',
+    briefUrl:
+      'https://docs.google.com/presentation/d/1tROIhj4VHEu-tdPz5J6I9iqQrj3VRXAq/view',
     fullUrl:
-      'https://docs.google.com/presentation/d/1tROIhj4VHEu-tdPz5J6I9iqQrj3VRXAq/view'
+      'https://docs.google.com/document/d/1ZQCCOqf4Nv_Mra81kt2GAYhkefNhMsD_/view'
   },
   'surface-compliance-exit-arc': {
-    briefUrl: '',
+    briefUrl:
+      'https://docs.google.com/presentation/d/18wrqLBFYMcUWmAeV5GCgxOnD8aL5jQQl/view',
     fullUrl:
-      'https://docs.google.com/presentation/d/18wrqLBFYMcUWmAeV5GCgxOnD8aL5jQQl/view'
+      'https://docs.google.com/document/d/1sKPgBmv5R_f1Biq89hbPJRmHFVFAPbOt/view'
   },
   'youtube-thinking': {
     briefUrl:
