@@ -30,12 +30,18 @@ export const RESEARCH_DOCUMENT_DEFAULTS: Record<
   'surface-compliance': {
     briefUrl: '',
     fullUrl:
-      'https://docs.google.com/document/d/1ZQCCOqf4Nv_Mra81kt2GAYhkefNhMsD_/view'
+      'https://docs.google.com/presentation/d/1tROIhj4VHEu-tdPz5J6I9iqQrj3VRXAq/view'
   },
   'surface-compliance-exit-arc': {
     briefUrl: '',
     fullUrl:
-      'https://docs.google.com/document/d/1sKPgBmv5R_f1Biq89hbPJRmHFVFAPbOt/view'
+      'https://docs.google.com/presentation/d/18wrqLBFYMcUWmAeV5GCgxOnD8aL5jQQl/view'
+  },
+  'youtube-thinking': {
+    briefUrl:
+      'https://docs.google.com/presentation/d/1SkHXiHQDOjyotQHmwxOGrB2cqSZpaBqs/view',
+    fullUrl:
+      'https://docs.google.com/presentation/d/1vpK9sLxE-IEwd4Nq34igS6IE3v8rOvJq/view'
   }
 };
 

@@ -25,6 +25,13 @@ export const research = [
     dateTime: '2026-08'
   },
   {
+    href: '/work/youtube-thinking',
+    title:
+      'YouTube — first-person UX analysis of attention, autoplay, and metacognitive hijacking',
+    date: 'May 2026',
+    dateTime: '2026-05'
+  },
+  {
     href: '/work/six-week-silence',
     title: 'The Six-Week Silence — how a team mistook a communication gap for a broken process',
     date: 'August 2026',

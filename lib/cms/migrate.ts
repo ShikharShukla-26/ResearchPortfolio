@@ -121,4 +121,62 @@ export async function runMigrations() {
         )
     `;
   }
+
+  const presentationSlugs = [
+    'surface-compliance',
+    'surface-compliance-exit-arc',
+    'youtube-thinking'
+  ] as const;
+
+  for (const slug of presentationSlugs) {
+    const urls = RESEARCH_DOCUMENT_DEFAULTS[slug];
+    if (!urls) continue;
+    await sql`
+      UPDATE cms_research
+      SET
+        brief_url = ${urls.briefUrl},
+        full_url = ${urls.fullUrl},
+        updated_at = NOW()
+      WHERE slug = ${slug}
+    `;
+  }
+
+  const youtube = RESEARCH_DOCUMENT_DEFAULTS['youtube-thinking'];
+  const [{ nextOrder }] = await sql<{ nextOrder: number }[]>`
+    SELECT COALESCE(MAX(sort_order), -1) + 1 AS "nextOrder" FROM cms_research
+  `;
+
+  await sql`
+    INSERT INTO cms_research (
+      slug,
+      title,
+      description,
+      date_display,
+      date_time,
+      meta_line,
+      body_mdx,
+      sort_order,
+      brief_url,
+      full_url
+    )
+    VALUES (
+      ${'youtube-thinking'},
+      ${'YouTube — first-person UX analysis of attention, autoplay, and metacognitive hijacking'},
+      ${''},
+      ${'May 2026'},
+      ${'2026-05'},
+      ${''},
+      ${'# YouTube — UX case study\n\nBrief and full Google Slides decks.\n'},
+      ${nextOrder ?? 0},
+      ${youtube.briefUrl},
+      ${youtube.fullUrl}
+    )
+    ON CONFLICT (slug) DO UPDATE SET
+      title = EXCLUDED.title,
+      date_display = EXCLUDED.date_display,
+      date_time = EXCLUDED.date_time,
+      brief_url = EXCLUDED.brief_url,
+      full_url = EXCLUDED.full_url,
+      updated_at = NOW()
+  `;
 }
