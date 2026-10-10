@@ -162,7 +162,7 @@ export async function runMigrations() {
     )
     VALUES (
       ${'youtube-thinking'},
-      ${'YouTube — first-person UX analysis of attention, autoplay, and metacognitive hijacking'},
+      ${'YouTube Diary Study'},
       ${''},
       ${'May 2026'},
       ${'2026-05'},
@@ -173,11 +173,50 @@ export async function runMigrations() {
       ${youtube.fullUrl}
     )
     ON CONFLICT (slug) DO UPDATE SET
-      title = EXCLUDED.title,
-      date_display = EXCLUDED.date_display,
-      date_time = EXCLUDED.date_time,
       brief_url = EXCLUDED.brief_url,
       full_url = EXCLUDED.full_url,
       updated_at = NOW()
   `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS cms_applied_migrations (
+      name TEXT PRIMARY KEY,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql.begin(async (tx) => {
+    const claimed = await tx`
+      INSERT INTO cms_applied_migrations (name)
+      VALUES ('research-order-drive-names-v1')
+      ON CONFLICT (name) DO NOTHING
+      RETURNING name
+    `;
+    if (claimed.length === 0) return;
+
+    for (const [i, item] of RESEARCH_LAYOUT.entries()) {
+      if (item.title) {
+        await tx`
+          UPDATE cms_research
+          SET sort_order = ${i}, title = ${item.title}, updated_at = NOW()
+          WHERE slug = ${item.slug}
+        `;
+      } else {
+        await tx`
+          UPDATE cms_research SET sort_order = ${i} WHERE slug = ${item.slug}
+        `;
+      }
+    }
+  });
 }
+
+/** Applied once; later reorders and title edits in Admin are kept. */
+const RESEARCH_LAYOUT: { slug: string; title?: string }[] = [
+  { slug: 'surface-compliance', title: 'SurfaceCompliance_Part1' },
+  { slug: 'surface-compliance-exit-arc', title: 'SurfaceCompliance_Part2' },
+  { slug: 'six-week-silence', title: 'Six-Week Silence' },
+  { slug: 'youtube-thinking', title: 'YouTube Diary Study' },
+  { slug: 'zipcar' },
+  { slug: 'wise' },
+  { slug: 'decathlon' }
+];

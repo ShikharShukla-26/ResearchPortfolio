@@ -14,28 +14,27 @@ export const site = {
 export const research = [
   {
     href: '/work/surface-compliance',
-    title: 'Surface Compliance, Silent Resistance — a workplace ethnography',
+    title: 'SurfaceCompliance_Part1',
     date: 'Jan – Jun 2026',
     dateTime: '2026-06'
   },
   {
     href: '/work/surface-compliance-exit-arc',
-    title: 'The Exit Arc — the Control–Trust–Output Loop in terminal phase',
+    title: 'SurfaceCompliance_Part2',
     date: 'Jul – Aug 2026',
     dateTime: '2026-08'
   },
   {
-    href: '/work/youtube-thinking',
-    title:
-      'YouTube — first-person UX analysis of attention, autoplay, and metacognitive hijacking',
-    date: 'May 2026',
-    dateTime: '2026-05'
-  },
-  {
     href: '/work/six-week-silence',
-    title: 'The Six-Week Silence — how a team mistook a communication gap for a broken process',
+    title: 'Six-Week Silence',
     date: 'August 2026',
     dateTime: '2026-08'
+  },
+  {
+    href: '/work/youtube-thinking',
+    title: 'YouTube Diary Study',
+    date: 'May 2026',
+    dateTime: '2026-05'
   },
   {
     href: '/work/zipcar',
@@ -44,14 +43,14 @@ export const research = [
     dateTime: '2026'
   },
   {
-    href: '/work/decathlon',
-    title: 'Decathlon.in — heuristic evaluation of the purchase journey',
+    href: '/work/wise',
+    title: 'Wise India — onboarding cognitive walkthrough for a first-time visitor',
     date: 'September 2026',
     dateTime: '2026-09'
   },
   {
-    href: '/work/wise',
-    title: 'Wise India — onboarding cognitive walkthrough for a first-time visitor',
+    href: '/work/decathlon',
+    title: 'Decathlon.in — heuristic evaluation of the purchase journey',
     date: 'September 2026',
     dateTime: '2026-09'
   }
