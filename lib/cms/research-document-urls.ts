@@ -5,7 +5,7 @@ export const RESEARCH_DOCUMENT_DEFAULTS: Record<
 > = {
   'six-week-silence': {
     briefUrl:
-      'https://shikharshukla26.substack.com/p/research-project-001-the-six-week',
+      'https://docs.google.com/presentation/d/18VOpWV1Fz4DPCpZZNvBkjnRi8unjVtUt/view',
     fullUrl:
       'https://docs.google.com/document/d/1ln9ZmSYoq51CgS51H_S1xh8EjrJb9bLS/view'
   },

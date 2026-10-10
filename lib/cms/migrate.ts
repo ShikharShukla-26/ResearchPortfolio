@@ -123,6 +123,7 @@ export async function runMigrations() {
   }
 
   const presentationSlugs = [
+    'six-week-silence',
     'surface-compliance',
     'surface-compliance-exit-arc',
     'youtube-thinking'
