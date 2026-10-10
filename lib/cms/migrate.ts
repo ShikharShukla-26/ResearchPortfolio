@@ -208,6 +208,27 @@ export async function runMigrations() {
       }
     }
   });
+
+  await sql.begin(async (tx) => {
+    const claimed = await tx`
+      INSERT INTO cms_applied_migrations (name)
+      VALUES ('bio-org-behavioral-v1')
+      ON CONFLICT (name) DO NOTHING
+      RETURNING name
+    `;
+    if (claimed.length === 0) return;
+
+    await tx`
+      UPDATE cms_site
+      SET data = data || ${tx.json({
+        tagline: defaultSiteSettings.tagline,
+        bioDefaultMd: defaultSiteSettings.bioDefaultMd,
+        bioLongMd: defaultSiteSettings.bioLongMd
+      })},
+          updated_at = NOW()
+      WHERE id = 1
+    `;
+  });
 }
 
 /** Applied once; later reorders and title edits in Admin are kept. */

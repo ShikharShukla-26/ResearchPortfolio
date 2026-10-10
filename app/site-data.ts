@@ -1,7 +1,7 @@
 export const site = {
   name: 'Shikhar Shukla',
   tagline:
-    'Behavioral & UX research — qualitative, ethnographic and heuristic methods. Vadodara, India.',
+    'Organizational & behavioral research — I study how work really happens, not how it is supposed to happen. Vadodara, India.',
   email: 'shikharshukla678@gmail.com',
   phone: '+91 9825496937',
   address: 'Mangalpur, Vadodara, Gujarat, India 390011',
