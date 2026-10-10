@@ -8,7 +8,7 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/shikhar-shukla-2094ba135/',
   substack: 'https://shikharshukla26.substack.com',
   portfolio: 'https://www.shikharshukla.dev',
-  resume: '/Shikhar_Shukla_Research.pdf'
+  resume: '/Shikhar_Shukla_Resume.pdf'
 } as const;
 
 export const research = [

@@ -10,7 +10,7 @@ export const defaultSiteSettings: SiteSettings = {
   linkedin: 'https://www.linkedin.com/in/shikhar-shukla-2094ba135/',
   substack: 'https://shikharshukla26.substack.com',
   portfolio: 'https://www.shikharshukla.dev',
-  resume: '/Shikhar_Shukla_Research.pdf',
+  resume: '/Shikhar_Shukla_Resume.pdf',
   bioDefaultMd: `I investigate how people, processes, and decision-making actually interact inside complex systems — then turn the gaps into clear recommendations.
 
 I came up through software engineering, but the work that holds my attention is observational: six months of embedded [workplace ethnography](/work/surface-compliance), independent behavioral and UX studies ([Zipcar](/work/zipcar), [Wise](/work/wise), [Decathlon](/work/decathlon), [YouTube](/work/youtube-thinking)), and writing on [Substack](https://shikharshukla26.substack.com) about attention, persuasive design, and what people avoid when they stay on a platform.
@@ -22,5 +22,5 @@ I taught myself JavaScript and spent about a year and a half as a full-stack dev
 
 In 2025 I started documenting my own digital habits — YouTube Shorts, autoplay, anticipation loops — as first-person research on persuasive design. That became essays on [Substack](https://shikharshukla26.substack.com) and a [YouTube diary study](/work/youtube-thinking). Then the workplace itself became the study. Between January and August 2026 I was an embedded insider in a seven-person software team while management answered a missed deadline with a wave of control policies. I documented the full arc in [SurfaceCompliance_Part1](/work/surface-compliance) and [SurfaceCompliance_Part2](/work/surface-compliance-exit-arc) — including my own exit as data, not as something left out of the analysis. Alongside that I ran self-initiated product investigations ([Zipcar](/work/zipcar), [Decathlon](/work/decathlon), [Wise](/work/wise), [Six-Week Silence](/work/six-week-silence)), always ending with the same discipline: what is confirmed, what is still a hypothesis, and the cheapest next test.
 
-I'm now building toward organizational and behavioral research — workplace ethnography, employee-experience investigations, and short, scoped listening engagements that surface hidden frictions and turn them into recommendations someone can act on. If you want someone who studies how work really happens (not how it is supposed to happen), you can [email me](mailto:shikharshukla678@gmail.com), find me on [LinkedIn](https://www.linkedin.com/in/shikhar-shukla-2094ba135/), or read the [resume](/Shikhar_Shukla_Research.pdf).`
+I'm now building toward organizational and behavioral research — workplace ethnography, employee-experience investigations, and short, scoped listening engagements that surface hidden frictions and turn them into recommendations someone can act on. If you want someone who studies how work really happens (not how it is supposed to happen), you can [email me](mailto:shikharshukla678@gmail.com), find me on [LinkedIn](https://www.linkedin.com/in/shikhar-shukla-2094ba135/), or read the [resume](/Shikhar_Shukla_Resume.pdf).`
 };
