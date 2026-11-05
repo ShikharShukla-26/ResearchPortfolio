@@ -3,11 +3,33 @@ import { HomeVisual } from '../components/home-visual';
 import { NewTabAnchor } from '../components/new-tab-anchor';
 import { ResearchList } from '../components/research-list';
 import { getPortfolioData } from '@/lib/cms/get-data';
+import { splitResearch, splitWriting } from '@/lib/home-sections';
 
 export const dynamic = 'force-dynamic';
 
+function WritingRows({
+  items
+}: {
+  items: Array<{ href: string; title: string; date: string; dateTime: string }>;
+}) {
+  return (
+    <div className="blogs-list">
+      {items.map((item) => (
+        <NewTabAnchor key={item.href} className="blog-row" href={item.href}>
+          <span>{item.title}</span>
+          <time dateTime={item.dateTime}>{item.date}</time>
+        </NewTabAnchor>
+      ))}
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const { site, research, writing, logs } = await getPortfolioData();
+  const { featured: featuredResearch, other: otherStudies } =
+    splitResearch(research);
+  const { featured: featuredWriting, other: otherWriting } =
+    splitWriting(writing);
 
   return (
     <div className="home-layout">
@@ -27,24 +49,27 @@ export default async function HomePage() {
         <div className="writing-index">
           <section aria-labelledby="research-heading">
             <h2 id="research-heading">Research</h2>
-            <ResearchList items={research} />
+            <ResearchList items={featuredResearch} />
           </section>
+
+          {otherStudies.length > 0 ? (
+            <section aria-labelledby="other-studies-heading">
+              <h2 id="other-studies-heading">Other Studies</h2>
+              <ResearchList items={otherStudies} />
+            </section>
+          ) : null}
 
           <section aria-labelledby="writing-heading">
             <h2 id="writing-heading">Writing</h2>
-            <div className="blogs-list">
-              {writing.map((item) => (
-                <NewTabAnchor
-                  key={item.href}
-                  className="blog-row"
-                  href={item.href}
-                >
-                  <span>{item.title}</span>
-                  <time dateTime={item.dateTime}>{item.date}</time>
-                </NewTabAnchor>
-              ))}
-            </div>
+            <WritingRows items={featuredWriting} />
           </section>
+
+          {otherWriting.length > 0 ? (
+            <section aria-labelledby="other-writing-heading">
+              <h2 id="other-writing-heading">Other Writing</h2>
+              <WritingRows items={otherWriting} />
+            </section>
+          ) : null}
 
           {logs.length > 0 ? (
             <section aria-labelledby="logs-heading">

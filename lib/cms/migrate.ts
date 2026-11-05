@@ -249,6 +249,34 @@ export async function runMigrations() {
       WHERE id = 1
     `;
   });
+
+  await sql.begin(async (tx) => {
+    const claimed = await tx`
+      INSERT INTO cms_applied_migrations (name)
+      VALUES ('bizops-positioning-v1')
+      ON CONFLICT (name) DO NOTHING
+      RETURNING name
+    `;
+    if (claimed.length === 0) return;
+
+    await tx`
+      UPDATE cms_site
+      SET data = data || ${tx.json({
+        tagline: defaultSiteSettings.tagline,
+        bioDefaultMd: defaultSiteSettings.bioDefaultMd
+      })},
+          updated_at = NOW()
+      WHERE id = 1
+    `;
+
+    for (const [i, item] of BIZOPS_RESEARCH_LAYOUT.entries()) {
+      await tx`
+        UPDATE cms_research
+        SET sort_order = ${i}, title = ${item.title}, updated_at = NOW()
+        WHERE slug = ${item.slug}
+      `;
+    }
+  });
 }
 
 /** Applied once; later reorders and title edits in Admin are kept. */
@@ -260,4 +288,24 @@ const RESEARCH_LAYOUT: { slug: string; title?: string }[] = [
   { slug: 'zipcar' },
   { slug: 'wise' },
   { slug: 'decathlon' }
+];
+
+const BIZOPS_RESEARCH_LAYOUT: { slug: string; title: string }[] = [
+  {
+    slug: 'surface-compliance',
+    title: 'Surface Compliance: How Control Policies Reduced Output'
+  },
+  {
+    slug: 'surface-compliance-exit-arc',
+    title: 'The Exit Arc: When Escalating Control Failed'
+  },
+  {
+    slug: 'six-week-silence',
+    title:
+      'Six-Week Silence: How One Unverified Assumption Changed Team Behavior'
+  },
+  { slug: 'youtube-thinking', title: 'YouTube Attention Study' },
+  { slug: 'zipcar', title: 'Zipcar First-Time Experience Audit' },
+  { slug: 'wise', title: 'Wise India Onboarding Walkthrough' },
+  { slug: 'decathlon', title: 'Decathlon Purchase Journey Audit' }
 ];

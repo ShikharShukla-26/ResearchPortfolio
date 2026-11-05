@@ -1,7 +1,7 @@
 export const site = {
   name: 'Shikhar Shukla',
   tagline:
-    'Organizational & behavioral research — I study how work really happens, not how it is supposed to happen. Vadodara, India.',
+    'Operational diagnosis & process improvement — I study how work actually happens, then turn the gaps into clear recommendations. Vadodara, India.',
   email: 'shikharshukla678@gmail.com',
   phone: '+91 9825496937',
   address: 'Mangalpur, Vadodara, Gujarat, India 390011',
@@ -14,43 +14,43 @@ export const site = {
 export const research = [
   {
     href: '/work/surface-compliance',
-    title: 'SurfaceCompliance_Part1',
+    title: 'Surface Compliance: How Control Policies Reduced Output',
     date: 'Jan – Jun 2026',
     dateTime: '2026-06'
   },
   {
     href: '/work/surface-compliance-exit-arc',
-    title: 'SurfaceCompliance_Part2',
+    title: 'The Exit Arc: When Escalating Control Failed',
     date: 'Jul – Aug 2026',
     dateTime: '2026-08'
   },
   {
     href: '/work/six-week-silence',
-    title: 'Six-Week Silence',
+    title: 'Six-Week Silence: How One Unverified Assumption Changed Team Behavior',
     date: 'August 2026',
     dateTime: '2026-08'
   },
   {
     href: '/work/youtube-thinking',
-    title: 'YouTube Diary Study',
+    title: 'YouTube Attention Study',
     date: 'May 2026',
     dateTime: '2026-05'
   },
   {
     href: '/work/zipcar',
-    title: 'Zipcar — first-time experience audit of the booking flow',
+    title: 'Zipcar First-Time Experience Audit',
     date: '2026',
     dateTime: '2026'
   },
   {
     href: '/work/wise',
-    title: 'Wise India — onboarding cognitive walkthrough for a first-time visitor',
+    title: 'Wise India Onboarding Walkthrough',
     date: 'September 2026',
     dateTime: '2026-09'
   },
   {
     href: '/work/decathlon',
-    title: 'Decathlon.in — heuristic evaluation of the purchase journey',
+    title: 'Decathlon Purchase Journey Audit',
     date: 'September 2026',
     dateTime: '2026-09'
   }
