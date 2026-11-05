@@ -11,5 +11,9 @@ export function mergeSiteSettings(
       merged[key] = defaultSiteSettings[key];
     }
   }
+  // Homepage positioning copy ships with the app bundle so deploys update production
+  // even when Postgres still holds older admin-saved text.
+  merged.tagline = defaultSiteSettings.tagline;
+  merged.bioDefaultMd = defaultSiteSettings.bioDefaultMd;
   return merged;
 }

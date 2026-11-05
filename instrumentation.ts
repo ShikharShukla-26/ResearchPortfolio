@@ -3,6 +3,19 @@
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+
+  if (process.env.POSTGRES_URL?.trim()) {
+    try {
+      const { runMigrations } = await import('./lib/cms/migrate');
+      await runMigrations();
+    } catch (err) {
+      console.error(
+        '[cms-migrate]',
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+
   if (process.env.VERCEL_ENV !== 'production') return;
   if (!process.env.VERCEL_TOKEN?.trim()) return;
   if (!process.env.VERCEL_URL) return;

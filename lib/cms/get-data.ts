@@ -16,6 +16,10 @@ import {
 import type { PortfolioData, SiteSettings } from './types';
 import { resolveResearchDocumentUrls } from './research-document-urls';
 
+const researchTitlesBySlug = Object.fromEntries(
+  staticResearch.map((r) => [r.href.replace(/^\/work\//, ''), r.title])
+);
+
 export async function getPortfolioData(): Promise<PortfolioData> {
   if (!cmsEnabled()) {
     return staticPortfolio();
@@ -65,7 +69,7 @@ export async function getPortfolioData(): Promise<PortfolioData> {
             .map((r) => ({
               slug: r.slug,
               href: `/work/${r.slug}`,
-              title: r.title,
+              title: researchTitlesBySlug[r.slug] ?? r.title,
               date: r.dateDisplay,
               dateTime: r.dateTime,
               briefUrl: r.briefUrl,
