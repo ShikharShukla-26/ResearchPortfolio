@@ -47,8 +47,8 @@ export default async function HomePage() {
         />
 
         <div className="writing-index">
-          <section aria-labelledby="research-heading">
-            <h2 id="research-heading">Research</h2>
+          <section aria-labelledby="selected-work-heading">
+            <h2 id="selected-work-heading">Selected Work</h2>
             <ResearchList items={featuredResearch} />
           </section>
 

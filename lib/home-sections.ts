@@ -1,4 +1,4 @@
-/** Featured on the homepage Research section (operational diagnosis). */
+/** Featured on the homepage Selected Work section (operational diagnosis). */
 export const FEATURED_RESEARCH_SLUGS = new Set([
   'surface-compliance',
   'surface-compliance-exit-arc',

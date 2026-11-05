@@ -17,8 +17,6 @@ I have a software engineering background. While delivering production work, I co
 
 My focus is operational diagnosis: understanding why processes and management systems produce unintended results, and recommending clearer, more effective ways of working.
 
-I am interested in Business Operations, Process Improvement, and cross-functional roles where diagnosing execution problems is valuable.
-
 I'm looking for Business Operations, Process Improvement, or cross-functional roles where diagnosing operational friction and improving how teams execute is the core of the work.`,
   bioLongMd: `I studied mechatronics at ITM Vocational University in Vadodara — diploma, then B.Tech. Control systems taught me to think in loops: a signal goes out, something changes, a signal comes back. I didn't know then that I'd spend most of my twenties watching that same loop play out between people and the products, and managers, that shape them.
 

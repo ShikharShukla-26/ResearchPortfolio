@@ -59,7 +59,9 @@ test.describe('Research', () => {
   }) => {
     await expect(page.getByText(title)).toBeVisible({ timeout: 15_000 });
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Research' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Selected Work' })
+    ).toBeVisible();
     await expect(page.getByText(title)).toBeVisible({ timeout: 20_000 });
   });
 
