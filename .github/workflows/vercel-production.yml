@@ -1,0 +1,57 @@
+# Vercel GitHub integration stopped creating production builds; deploy from CI on push.
+name: Deploy Vercel production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_folaDmDuVQIuuekP8hHelcw2
+      VERCEL_PROJECT_ID: prj_44BNm66qJ0MBJWQsBZYo6jeltlDz
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pull Vercel env
+        run: npx vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+        env:
+          VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+
+      - name: Build
+        run: npx vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        env:
+          VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+
+      - name: Deploy prebuilt
+        id: deploy
+        run: |
+          url=$(npx vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}" | tail -n 1)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+
+      - name: Sync production aliases
+        if: success()
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT: shikhar-research
+          GITHUB_SHA: ${{ github.sha }}
+        run: npm run deploy:sync-aliases
